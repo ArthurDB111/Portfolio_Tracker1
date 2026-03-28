@@ -25,30 +25,32 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
 .shell{display:flex;height:100vh;overflow:hidden}
-/* SIDEBAR */
 .sidebar{width:220px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
 .logo{padding:22px 20px 14px;border-bottom:1px solid var(--border)}
 .logo .wm{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.06em}
 .logo .sub{font-size:11px;color:var(--text3);margin-top:2px}
 .nav{padding:10px 0;flex:1;overflow-y:auto}
-.ni{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;color:var(--text2);font-size:13px;transition:all .15s;border-left:2px solid transparent}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;color:var(--text2);font-size:13px;transition:all .15s;border-left:2px solid transparent;user-select:none}
 .ni:hover{color:var(--text);background:var(--bg3)}
 .ni.active{color:var(--text);background:var(--bg3);border-left-color:var(--blue)}
 .ni svg{width:15px;height:15px;opacity:.7;flex-shrink:0}
 .ni.active svg{opacity:1}
 .sb-bottom{padding:14px 20px;border-top:1px solid var(--border)}
-.sync-btn{width:100%;padding:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text2);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
+.sync-btn{width:100%;padding:10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text2);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;margin-bottom:8px}
 .sync-btn:hover{border-color:var(--blue);color:var(--blue)}
 .sync-btn.syncing{color:var(--blue);border-color:var(--blue)}
-.key-setup{margin-top:10px;background:var(--goldBg);border:1px solid rgba(240,180,41,.25);border-radius:var(--r);padding:8px 10px;font-size:11px;color:var(--gold);text-align:center;cursor:pointer;transition:all .15s}
-.key-setup:hover{opacity:.8}
+.api-btn{width:100%;padding:10px;background:var(--goldBg);border:1px solid rgba(240,180,41,.3);border-radius:var(--r);color:var(--gold);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;margin-bottom:8px}
+.api-btn:hover{opacity:.8}
+.api-btn.ok{background:var(--greenBg);border-color:rgba(0,212,160,.3);color:var(--green)}
 .spin{animation:spin .8s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* MAIN */
+.sb-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);justify-content:center;margin-top:2px}
+.sb-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0}
+.sb-dot.ok{background:var(--green)}.sb-dot.err{background:var(--red)}
+.last-sync{font-size:10px;color:var(--text3);text-align:center;margin-top:6px}
 .main{flex:1;overflow-y:auto;background:var(--bg)}
 .page{display:none;padding:28px 32px;min-height:100%}
 .page.active{display:block}
-/* HEADER */
 .ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px;flex-wrap:wrap}
 .pt{font-size:22px;font-weight:500;letter-spacing:-.02em}
 .ps{font-size:13px;color:var(--text3);margin-top:3px}
@@ -56,56 +58,46 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-family:'DM Mono',monospace}
 .badge.live{background:var(--greenBg);color:var(--green);border:1px solid rgba(0,212,160,.2)}
 .badge.stale{background:var(--goldBg);color:var(--gold);border:1px solid rgba(240,180,41,.2)}
-.badge.err{background:var(--redBg);color:var(--red);border:1px solid rgba(255,91,107,.2)}
 .pulse{width:6px;height:6px;border-radius:50%;background:currentColor;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-/* METRICS */
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:22px}
 .metric{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px}
 .metric .lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
 .metric .val{font-size:21px;font-weight:500;font-family:'DM Mono',monospace}
 .metric .chg{font-size:12px;font-family:'DM Mono',monospace;margin-top:4px}
 .chg.pos{color:var(--green)}.chg.neg{color:var(--red)}
-/* CARDS / GRIDS */
 .g2{display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-bottom:12px}
 .g2b{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;margin-bottom:12px}
 .card:last-child{margin-bottom:0}
 .ct{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:14px;font-weight:500}
 .cw{position:relative;width:100%}
-/* RANGE */
 .rrow{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
 .rp{padding:3px 10px;border-radius:20px;font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;border:1px solid var(--border2);color:var(--text3);background:none;transition:all .15s}
 .rp:hover{color:var(--text2)}
 .rp.active{background:var(--blueBg);border-color:rgba(77,143,255,.4);color:var(--blue)}
-/* BENCH ROW */
 .brow{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
 .brow label{font-size:12px;color:var(--text2)}
 .ti{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:4px 8px;color:var(--text);font-size:12px;font-family:'DM Mono',monospace;outline:none;transition:border .15s}
 .ti:focus{border-color:var(--blue)}
-/* TOGGLE */
 .tgl{position:relative;width:32px;height:18px;flex-shrink:0}
 .tgl input{opacity:0;width:0;height:0;position:absolute}
 .ts{position:absolute;inset:0;background:var(--bg4);border-radius:9px;cursor:pointer;transition:.2s;border:1px solid var(--border2)}
 .tgl input:checked+.ts{background:var(--blue);border-color:var(--blue)}
 .ts:before{content:'';position:absolute;width:12px;height:12px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.2s}
 .tgl input:checked+.ts:before{transform:translateX(14px)}
-/* LEGEND */
 .leg{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--text2);margin-bottom:8px}
 .leg span{display:flex;align-items:center;gap:5px}
 .ld{width:8px;height:8px;border-radius:2px;flex-shrink:0}
-/* TABLE */
 .tw{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{text-align:left;padding:8px 12px;color:var(--text3);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:500;border-bottom:1px solid var(--border);white-space:nowrap}
 td{padding:9px 12px;color:var(--text);border-bottom:1px solid var(--border);font-size:13px;white-space:nowrap}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--bg3)}
-td.mono{font-family:'DM Mono',monospace}
 td.pos{color:var(--green);text-align:right;font-family:'DM Mono',monospace}
 td.neg{color:var(--red);text-align:right;font-family:'DM Mono',monospace}
 td.num{text-align:right;font-family:'DM Mono',monospace}
-/* FORMS */
 .asec{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;margin-bottom:22px}
 .at{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px;font-weight:500}
 .fr{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
@@ -114,22 +106,21 @@ td.num{text-align:right;font-family:'DM Mono',monospace}
 .fi input,.fi select{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:7px 10px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border .15s}
 .fi input:focus,.fi select:focus{border-color:var(--blue)}
 .fi select option{background:var(--bg3)}
-.btn{padding:7px 18px;border-radius:var(--r);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;border:1px solid transparent;font-weight:500}
+.btn{padding:8px 18px;border-radius:var(--r);font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;border:1px solid transparent;font-weight:500}
 .btn-p{background:var(--blue);color:#fff;border-color:var(--blue)}
 .btn-p:hover{opacity:.85}
 .btn-o{background:none;border:1px solid var(--border2);color:var(--text2)}
 .btn-o:hover{border-color:var(--blue);color:var(--blue)}
-.btn-d{background:none;border:1px solid var(--border2);color:var(--red);font-size:11px;padding:3px 8px;border-radius:4px;cursor:pointer}
+.btn-d{background:none;border:1px solid var(--border2);color:var(--red);font-size:11px;padding:4px 10px;border-radius:4px;cursor:pointer;font-family:'DM Sans',sans-serif}
 .btn-d:hover{background:var(--redBg)}
 .btn-sm{padding:4px 12px;font-size:12px}
 .msg{font-size:12px;color:var(--text3);align-self:center}
 .msg.ok{color:var(--green)}.msg.err{color:var(--red)}
-/* MISC */
 .empty{padding:40px 24px;text-align:center;color:var(--text3);font-size:13px}
 .dc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
 .dc .dv{font-family:'DM Mono',monospace;font-size:18px;font-weight:500}
 .dc .dl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
-.toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:12px 18px;font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;max-width:300px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:12px 18px;font-size:13px;z-index:9999;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;max-width:320px}
 .toast.show{opacity:1;transform:translateY(0)}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
@@ -140,29 +131,28 @@ td.num{text-align:right;font-family:'DM Mono',monospace}
 .tag.buy{background:var(--greenBg);color:var(--green)}
 .tag.sell{background:var(--redBg);color:var(--red)}
 .tag.div{background:var(--goldBg);color:var(--gold)}
-/* MODAL */
-.mo{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .mo.open{opacity:1;pointer-events:all}
-.md{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r3);padding:28px;width:460px;max-width:92vw;transform:translateY(12px);transition:transform .2s}
+.md{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r3);padding:28px;width:480px;max-width:94vw;transform:translateY(12px);transition:transform .2s;max-height:90vh;overflow-y:auto}
 .mo.open .md{transform:translateY(0)}
-.md-title{font-size:16px;font-weight:500;margin-bottom:4px}
-.md-sub{font-size:13px;color:var(--text3);margin-bottom:18px}
-.md-acts{display:flex;gap:8px;margin-top:18px;justify-content:flex-end}
-/* PROGRESS BAR */
-.pbw{background:var(--bg3);border-radius:4px;height:5px;overflow:hidden;margin-top:5px;flex:1}
-.pb{height:100%;border-radius:4px;transition:width .4s}
-/* API KEY MODAL */
-.api-field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.api-field label{font-size:12px;color:var(--text2)}
-.api-field input{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);font-size:13px;font-family:'DM Mono',monospace;outline:none;width:100%}
+.md-title{font-size:17px;font-weight:500;margin-bottom:4px}
+.md-sub{font-size:13px;color:var(--text3);margin-bottom:20px}
+.md-acts{display:flex;gap:8px;margin-top:20px;justify-content:flex-end}
+.api-section{background:var(--bg3);border-radius:var(--r);padding:14px;margin-bottom:14px;border-left:3px solid var(--blue)}
+.api-section.gold{border-left-color:var(--gold)}
+.api-section .sec-title{font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px}
+.api-section .sec-sub{font-size:11px;color:var(--text3);margin-bottom:10px}
+.api-section .sec-sub a{color:var(--blue);text-decoration:none}
+.api-field{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.api-field:last-child{margin-bottom:0}
+.api-field label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.05em}
+.api-field input{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);font-size:12px;font-family:'DM Mono',monospace;outline:none;width:100%;transition:border .15s}
 .api-field input:focus{border-color:var(--blue)}
-.api-hint{font-size:11px;color:var(--text3);margin-top:-8px;margin-bottom:14px}
-.api-hint a{color:var(--blue);text-decoration:none}
-/* SUPABASE STATUS */
-.sb-status{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);margin-top:8px;justify-content:center}
-.sb-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0}
-.sb-dot.ok{background:var(--green)}
-.sb-dot.err{background:var(--red)}
+.pbw{background:var(--bg3);border-radius:4px;height:5px;overflow:hidden;flex:1}
+.pb{height:100%;border-radius:4px;transition:width .4s}
+.src{font-size:9px;padding:1px 4px;border-radius:3px;background:var(--bg3);color:var(--text3);font-family:'DM Mono',monospace;margin-left:4px}
+/* Tooltip uitleg */
+.info{font-size:11px;color:var(--text3);margin-top:6px;padding:8px;background:var(--bg3);border-radius:var(--r)}
 @media(max-width:768px){
   .shell{flex-direction:column}
   .sidebar{width:100%;height:auto}
@@ -180,10 +170,7 @@ td.num{text-align:right;font-family:'DM Mono',monospace}
 <body>
 <div class="shell">
   <aside class="sidebar">
-    <div class="logo">
-      <div class="wm">PORTFOLIO</div>
-      <div class="sub">Personal Tracker</div>
-    </div>
+    <div class="logo"><div class="wm">PORTFOLIO</div><div class="sub">Personal Tracker</div></div>
     <nav class="nav">
       <div class="ni active" onclick="goTo('dashboard')">
         <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
@@ -207,54 +194,58 @@ td.num{text-align:right;font-family:'DM Mono',monospace}
       </div>
     </nav>
     <div class="sb-bottom">
-      <button class="sync-btn" id="sync-btn" onclick="syncPrices()">
-        <span id="sync-ico">↻</span> Prijzen verversen
-      </button>
-      <div class="key-setup" onclick="openApiModal()" id="key-hint">⚙ Stel API key in</div>
+      <button class="sync-btn" id="sync-btn" onclick="syncPrices()"><span id="sync-ico">↻</span> Prijzen verversen</button>
+      <button class="api-btn" id="api-btn" onclick="openApiModal()">⚙ Instellingen</button>
       <div class="sb-status"><span class="sb-dot" id="sb-dot"></span><span id="sb-label">Supabase: niet verbonden</span></div>
-      <div style="font-size:10px;color:var(--text3);margin-top:6px;text-align:center" id="last-sync"></div>
+      <div class="last-sync" id="last-sync"></div>
     </div>
   </aside>
 
   <main class="main">
-
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div class="ph">
-        <div><div class="pt">Dashboard</div><div class="ps" id="pf-name-sub">Overzicht van je portefeuille</div></div>
+        <div><div class="pt">Dashboard</div><div class="ps" id="pf-sub">Overzicht van je portefeuille</div></div>
         <div class="pacts">
           <button class="btn btn-o btn-sm" onclick="openExportModal()">↓ Exporteren</button>
           <div id="live-badge" class="badge stale"><span class="pulse"></span> Laden...</div>
         </div>
       </div>
       <div class="metrics">
-        <div class="metric"><div class="lbl">Totale waarde</div><div class="val" id="m-total">—</div></div>
-        <div class="metric"><div class="lbl">Kostenbasis</div><div class="val" id="m-cost">—</div></div>
+        <div class="metric">
+          <div class="lbl">Totale waarde</div>
+          <div class="val" id="m-total">—</div>
+          <div class="chg" id="m-total-chg"></div>
+        </div>
+        <div class="metric">
+          <div class="lbl">Transactiekosten</div>
+          <div class="val" id="m-cost">—</div>
+          <div class="chg neg" id="m-cost-pct"></div>
+          
+        </div>
         <div class="metric"><div class="lbl">Ongerealiseerd P&L</div><div class="val" id="m-pnl">—</div><div class="chg" id="m-pct"></div></div>
-        <div class="metric"><div class="lbl">Dividenden</div><div class="val" id="m-div">—</div><div class="chg pos" id="m-div-y"></div></div>
+        <div class="metric"><div class="lbl">Dividenden</div><div class="val" id="m-div">—</div><div class="chg pos" id="m-divy"></div></div>
       </div>
       <div class="g2">
         <div class="card">
-          <div class="ct">Allocatie</div>
+          <div class="ct">Allocatie per positie</div>
           <div class="cw" style="height:210px"><canvas id="pie-c"></canvas><div class="dc"><div class="dv" id="dc-t">€0</div><div class="dl">Totaal</div></div></div>
           <div id="pie-leg" class="leg" style="margin-top:10px"></div>
         </div>
         <div class="card">
-          <div class="ct">Portefeuillewaarde</div>
+          <div class="ct">Portefeuillewaarde vs Benchmark</div>
           <div class="brow">
             <label class="tgl"><input type="checkbox" id="bench-on" checked onchange="renderLine()"><span class="ts"></span></label>
             <label for="bench-on" style="font-size:12px;color:var(--text2);cursor:pointer">Benchmark</label>
-            <input class="ti" type="text" id="bench-sym" value="IWDA.AS" style="width:100px" placeholder="Symbool" onchange="loadBenchmark()">
+            <input class="ti" type="text" id="bench-sym" value="IWDA.AS" style="width:100px" onchange="loadBenchmark()">
           </div>
           <div class="rrow" id="rrow"></div>
           <div class="leg" id="line-leg"></div>
           <div class="cw" style="height:185px"><canvas id="line-c"></canvas></div>
+          <div class="info" style="margin-top:8px">Beide lijnen starten op dezelfde €-waarde — je ziet direct wie meer waard is</div>
         </div>
       </div>
-      <div class="card">
-        <div class="ct">Open posities</div>
-        <div class="tw" id="pos-tbl"></div>
-      </div>
+      <div class="card"><div class="ct">Open posities</div><div class="tw" id="pos-tbl"></div></div>
     </div>
 
     <!-- ASSET KLASSEN -->
@@ -266,10 +257,7 @@ td.num{text-align:right;font-family:'DM Mono',monospace}
           <div class="cw" style="height:230px"><canvas id="ap-c"></canvas><div class="dc"><div class="dv" id="ap-t">€0</div><div class="dl">Totaal</div></div></div>
           <div id="ap-leg" class="leg" style="margin-top:10px"></div>
         </div>
-        <div class="card">
-          <div class="ct">Waarde per categorie</div>
-          <div class="cw" style="height:230px"><canvas id="ab-c"></canvas></div>
-        </div>
+        <div class="card"><div class="ct">Waarde per categorie</div><div class="cw" style="height:230px"><canvas id="ab-c"></canvas></div></div>
       </div>
       <div class="card"><div class="ct">Toewijzing & doelgewichten</div><div id="asset-tbl"></div></div>
     </div>
@@ -327,36 +315,54 @@ td.num{text-align:right;font-family:'DM Mono',monospace}
     <div class="page" id="page-portfolios">
       <div class="ph">
         <div><div class="pt">Portefeuilles</div><div class="ps">Meerdere portefeuilles beheren</div></div>
-        <button class="btn btn-p btn-sm" onclick="createPf()">+ Nieuw</button>
+        <button class="btn btn-p btn-sm" onclick="openPfModal()">+ Nieuw</button>
       </div>
       <div id="pf-cards"></div>
     </div>
-
   </main>
 </div>
 
-<!-- API KEY MODAL -->
+<!-- INSTELLINGEN MODAL -->
 <div class="mo" id="api-modal">
   <div class="md">
-    <div class="md-title">Configuratie</div>
-    <div class="md-sub">Voer je API keys in voor live koersen en cloudopslag.</div>
-
-    <div style="font-size:12px;color:var(--text3);margin-bottom:12px;padding:10px;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--blue)">
-      <strong style="color:var(--text)">Stap 1 — Finnhub (verplicht voor live koersen)</strong><br>
-      Gratis API key op <a href="https://finnhub.io" target="_blank" style="color:var(--blue)">finnhub.io</a> → Registreer → Dashboard → API Key kopiëren
+    <div class="md-title">⚙ Instellingen</div>
+    <div class="md-sub">Keys worden permanent opgeslagen in je browser.</div>
+    <div class="api-section">
+      <div class="sec-title">Alpha Vantage — Aandelen, ETFs & Goud (aanbevolen)</div>
+      <div class="sec-sub">Gratis op <a href="https://www.alphavantage.co/support/#api-key" target="_blank">alphavantage.co</a> → "Get Free API Key" → kopieer je key. Crypto via CoinGecko werkt altijd gratis zonder key.</div>
+      <div class="api-field"><label>Alpha Vantage API Key</label><input type="text" id="cfg-av" placeholder="XXXXXXXXXXXXXXXXXX" spellcheck="false" autocomplete="off"></div>
     </div>
-    <div class="api-field"><label>Finnhub API Key</label><input type="text" id="cfg-finnhub" placeholder="pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" spellcheck="false"></div>
-
-    <div style="font-size:12px;color:var(--text3);margin-bottom:12px;padding:10px;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--purple)">
-      <strong style="color:var(--text)">Stap 2 — Supabase (optioneel, voor cloudsync)</strong><br>
-      Gratis op <a href="https://supabase.com" target="_blank" style="color:var(--purple)">supabase.com</a> → New project → Settings → API → URL + anon key kopiëren
+    <div class="api-section" style="border-left-color:var(--text3)">
+      <div class="sec-title">Finnhub — Alternatief voor aandelen (optioneel)</div>
+      <div class="sec-sub">Gratis op <a href="https://finnhub.io" target="_blank">finnhub.io</a> → registreer → kopieer je API key (begint met pk_...)</div>
+      <div class="api-field"><label>Finnhub API Key</label><input type="text" id="cfg-fh" placeholder="pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" spellcheck="false" autocomplete="off"></div>
     </div>
-    <div class="api-field"><label>Supabase URL</label><input type="text" id="cfg-sb-url" placeholder="https://xxxx.supabase.co" spellcheck="false"></div>
-    <div class="api-field"><label>Supabase Anon Key</label><input type="text" id="cfg-sb-key" placeholder="eyJhbGciOiJ..." spellcheck="false"></div>
-
+    <div class="api-section gold">
+      <div class="sec-title">Supabase — Cloudopslag (optioneel)</div>
+      <div class="sec-sub">Gratis op <a href="https://supabase.com" target="_blank" style="color:var(--gold)">supabase.com</a> → Settings → API Keys → anon public key</div>
+      <div class="api-field"><label>Supabase URL</label><input type="text" id="cfg-su" placeholder="https://xxxx.supabase.co" spellcheck="false" autocomplete="off"></div>
+      <div class="api-field"><label>Supabase Anon Key</label><input type="text" id="cfg-sk" placeholder="eyJhbGciOiJ..." spellcheck="false" autocomplete="off"></div>
+    </div>
+    <div id="cfg-status" style="font-size:12px;color:var(--text3);min-height:16px"></div>
     <div class="md-acts">
       <button class="btn btn-o" onclick="closeApiModal()">Annuleren</button>
-      <button class="btn btn-p" onclick="saveConfig()">Opslaan</button>
+      <button class="btn btn-p" onclick="saveConfig()">Opslaan & verbinden</button>
+    </div>
+  </div>
+</div>
+
+<!-- PORTEFEUILLE MODAL (nieuw/hernoemen) -->
+<div class="mo" id="pf-modal">
+  <div class="md" style="width:360px">
+    <div class="md-title" id="pf-modal-title">Nieuwe portefeuille</div>
+    <div class="md-sub" id="pf-modal-sub">Kies een naam voor je portefeuille.</div>
+    <div class="api-field">
+      <label>Naam</label>
+      <input type="text" id="pf-modal-name" placeholder="bv. Pensioen, Speculatief..." style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;width:100%">
+    </div>
+    <div class="md-acts">
+      <button class="btn btn-o" onclick="closePfModal()">Annuleren</button>
+      <button class="btn btn-p" id="pf-modal-confirm" onclick="confirmPfModal()">Aanmaken</button>
     </div>
   </div>
 </div>
@@ -364,13 +370,13 @@ td.num{text-align:right;font-family:'DM Mono',monospace}
 <!-- EXPORT MODAL -->
 <div class="mo" id="exp-modal">
   <div class="md">
-    <div class="md-title">Exporteren</div>
-    <div class="md-sub">Download je portefeuilledata als bestand.</div>
+    <div class="md-title">↓ Exporteren</div>
+    <div class="md-sub">Download je portefeuilledata.</div>
     <div style="display:flex;flex-direction:column;gap:8px">
-      <button class="btn btn-o" style="text-align:left;padding:12px 16px" onclick="doExport('tx')"><div style="font-weight:500">Transacties → CSV</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Alle aan- en verkopen, importeerbaar in Excel</div></button>
-      <button class="btn btn-o" style="text-align:left;padding:12px 16px" onclick="doExport('div')"><div style="font-weight:500">Dividenden → CSV</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Alle uitkeringen per datum</div></button>
+      <button class="btn btn-o" style="text-align:left;padding:12px 16px" onclick="doExport('tx')"><div style="font-weight:500">Transacties → CSV</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Alle aan- en verkopen</div></button>
+      <button class="btn btn-o" style="text-align:left;padding:12px 16px" onclick="doExport('div')"><div style="font-weight:500">Dividenden → CSV</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Alle uitkeringen</div></button>
       <button class="btn btn-o" style="text-align:left;padding:12px 16px" onclick="doExport('pos')"><div style="font-weight:500">Posities → CSV</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Huidige posities met P&L</div></button>
-      <button class="btn btn-o" style="text-align:left;padding:12px 16px" onclick="doExport('json')"><div style="font-weight:500">Volledige backup → JSON</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Alle data inclusief instellingen</div></button>
+      <button class="btn btn-o" style="text-align:left;padding:12px 16px" onclick="doExport('json')"><div style="font-weight:500">Volledige backup → JSON</div><div style="font-size:11px;color:var(--text3);margin-top:2px">Alle data + instellingen</div></button>
     </div>
     <div class="md-acts"><button class="btn btn-o" onclick="closeExpModal()">Sluiten</button></div>
   </div>
@@ -379,258 +385,329 @@ td.num{text-align:right;font-family:'DM Mono',monospace}
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════
-// CONSTANTS
-// ═══════════════════════════════════════════
-const AC = ['Aandelen','Crypto','Grondstoffen','Obligaties','Cash','Alternatief','Vastgoed','ETF/Fonds'];
+// ═══════════════════════════════════
+// CONSTANTEN
+// ═══════════════════════════════════
+const AC  = ['Aandelen','Crypto','Grondstoffen','Obligaties','Cash','Alternatief','Vastgoed','ETF/Fonds'];
 const ACC = ['#4d8fff','#f0b429','#00d4a0','#a78bfa','#8b8fa8','#ff5b6b','#fb923c','#34d399'];
 const PC  = ['#4d8fff','#00d4a0','#f0b429','#ff5b6b','#a78bfa','#fb923c','#34d399','#f472b6','#38bdf8','#facc15'];
 
-// ═══════════════════════════════════════════
-// CONFIG (API keys)
-// ═══════════════════════════════════════════
-let CFG = JSON.parse(localStorage.getItem('ptx_cfg') || '{}');
-// CFG = { finnhub: 'pk_...', sbUrl: 'https://...', sbKey: 'eyJ...' }
+// Crypto: ticker → CoinGecko ID
+const CGMAP = {
+  'BTC':'bitcoin','ETH':'ethereum','BNB':'binancecoin','XRP':'ripple',
+  'ADA':'cardano','SOL':'solana','DOT':'polkadot','DOGE':'dogecoin',
+  'MATIC':'matic-network','LINK':'chainlink','LTC':'litecoin','AVAX':'avalanche-2',
+  'BTC-EUR':'bitcoin','ETH-EUR':'ethereum','SOL-EUR':'solana','BNB-EUR':'binancecoin',
+  'XRP-EUR':'ripple','ADA-EUR':'cardano',
+};
 
+// ═══════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════
+let CFG = {};
+try { CFG = JSON.parse(localStorage.getItem('ptx_cfg')||'{}'); } catch(e){}
 function saveCFG(){ localStorage.setItem('ptx_cfg',JSON.stringify(CFG)); }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════
-let portfolios = JSON.parse(localStorage.getItem('ptx_pf') || 'null');
-if(!portfolios){
-  const old = localStorage.getItem('ptx_v2');
-  portfolios = [{id:'default',name:'Mijn Portefeuille',transactions:old?JSON.parse(old):[],created:Date.now()}];
+// ═══════════════════════════════════
+let portfolios, activeId, prices, assetCls, assetTgt, dividends;
+
+function loadState(){
+  try{
+    portfolios = JSON.parse(localStorage.getItem('ptx_pf')||'null');
+    if(!portfolios){
+      const old = localStorage.getItem('ptx_v2');
+      portfolios = [{id:'default',name:'Mijn Portefeuille',transactions:old?JSON.parse(old):[],created:Date.now()}];
+    }
+    activeId  = localStorage.getItem('ptx_act')||portfolios[0].id;
+    if(!portfolios.find(p=>p.id===activeId)) activeId=portfolios[0].id;
+    prices    = JSON.parse(localStorage.getItem('ptx_px')||'{}');
+    assetCls  = JSON.parse(localStorage.getItem('ptx_ac')||'{}');
+    assetTgt  = JSON.parse(localStorage.getItem('ptx_at')||'{}');
+    dividends = JSON.parse(localStorage.getItem('ptx_dv')||'[]');
+  }catch(e){
+    portfolios=[{id:'default',name:'Mijn Portefeuille',transactions:[],created:Date.now()}];
+    activeId='default'; prices={}; assetCls={}; assetTgt={}; dividends=[];
+  }
 }
-let activeId = localStorage.getItem('ptx_act') || portfolios[0].id;
-if(!portfolios.find(p=>p.id===activeId)) activeId = portfolios[0].id;
-
-let prices    = JSON.parse(localStorage.getItem('ptx_px') || '{}'); // {ticker:{price,chg,chgP,ts}}
-let assetCls  = JSON.parse(localStorage.getItem('ptx_ac') || '{}');
-let assetTgt  = JSON.parse(localStorage.getItem('ptx_at') || '{}');
-let dividends = JSON.parse(localStorage.getItem('ptx_dv') || '[]');
-let benchHistory = null; // {labels[], vals[]}
-let selectedRange = 'MAX';
-
-let pieChart=null,lineChart=null,apChart=null,abChart=null,dbChart=null,dyChart=null;
+loadState();
 
 function pf(){ return portfolios.find(p=>p.id===activeId)||portfolios[0]; }
 function txs(){ return pf().transactions||[]; }
 function myDivs(){ return dividends.filter(d=>!d.pfId||d.pfId===activeId); }
 
-function save(){
-  localStorage.setItem('ptx_pf', JSON.stringify(portfolios));
+function saveLocal(){
+  localStorage.setItem('ptx_pf',  JSON.stringify(portfolios));
   localStorage.setItem('ptx_act', activeId);
-  localStorage.setItem('ptx_px', JSON.stringify(prices));
-  localStorage.setItem('ptx_ac', JSON.stringify(assetCls));
-  localStorage.setItem('ptx_at', JSON.stringify(assetTgt));
-  localStorage.setItem('ptx_dv', JSON.stringify(dividends));
+  localStorage.setItem('ptx_px',  JSON.stringify(prices));
+  localStorage.setItem('ptx_ac',  JSON.stringify(assetCls));
+  localStorage.setItem('ptx_at',  JSON.stringify(assetTgt));
+  localStorage.setItem('ptx_dv',  JSON.stringify(dividends));
 }
 
-// ═══════════════════════════════════════════
-// SUPABASE (Laag 2)
-// ═══════════════════════════════════════════
-let SB = null; // supabase client
+// ═══════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════
+let SB_OK = false;
 
-async function initSupabase(){
-  const dot = document.getElementById('sb-dot');
-  const lbl = document.getElementById('sb-label');
-  if(!CFG.sbUrl || !CFG.sbKey){
-    dot.className='sb-dot'; lbl.textContent='Supabase: niet ingesteld';
-    return false;
-  }
-  try{
-    // Lightweight test — fetch portfolios table
-    const r = await sbFetch('GET','portfolios?limit=1');
-    if(r.ok){
-      dot.className='sb-dot ok'; lbl.textContent='Supabase: verbonden';
-      SB = true;
-      await syncFromSupabase();
-      return true;
-    } else {
-      dot.className='sb-dot err'; lbl.textContent='Supabase: fout';
-      return false;
-    }
-  }catch(e){
-    dot.className='sb-dot err'; lbl.textContent='Supabase: geen verbinding';
-    return false;
-  }
-}
-
-// Raw Supabase REST call
 async function sbFetch(method, path, body=null){
-  const url = CFG.sbUrl.replace(/\/$/',') + '/rest/v1/' + path;
-  const opts = {
+  const base=(CFG.sbUrl||'').replace(/\/$/,'');
+  return fetch(base+'/rest/v1/'+path,{
     method,
     headers:{
-      'apikey': CFG.sbKey,
-      'Authorization': 'Bearer '+CFG.sbKey,
+      'apikey':CFG.sbKey||'',
+      'Authorization':'Bearer '+(CFG.sbKey||''),
       'Content-Type':'application/json',
-      'Prefer': method==='POST'?'return=representation':'',
-    }
-  };
-  if(body) opts.body = JSON.stringify(body);
-  return fetch(url, opts);
+      'Prefer':method==='POST'?'resolution=merge-duplicates':'',
+    },
+    body:body?JSON.stringify(body):undefined,
+    signal:AbortSignal.timeout(10000)
+  });
 }
 
-// Setup Supabase tables (idempotent via REST — we just upsert)
-async function ensureSupabaseTables(){
-  // We use a single key-value store approach via a `store` table
-  // Table: store (key text PRIMARY KEY, value jsonb)
-  // This avoids complex schema migrations
-}
-
-async function syncToSupabase(){
-  if(!SB||!CFG.sbUrl||!CFG.sbKey) return;
-  const payload = {key:'portfolio_data', value: JSON.stringify({portfolios,dividends,assetCls,assetTgt})};
+async function initSupabase(){
+  const dot=document.getElementById('sb-dot');
+  const lbl=document.getElementById('sb-label');
+  if(!CFG.sbUrl||!CFG.sbKey){ dot.className='sb-dot'; lbl.textContent='Supabase: niet ingesteld'; SB_OK=false; return; }
   try{
-    await sbFetch('POST','store?on_conflict=key', payload);
-  }catch(e){}
+    const r=await sbFetch('GET','store?limit=1');
+    if(r.ok){ SB_OK=true; dot.className='sb-dot ok'; lbl.textContent='Supabase: verbonden ✓'; await pullFromSupabase(); }
+    else { SB_OK=false; dot.className='sb-dot err'; lbl.textContent='Supabase: fout'; }
+  }catch(e){ SB_OK=false; dot.className='sb-dot err'; lbl.textContent='Supabase: geen verbinding'; }
 }
 
-async function syncFromSupabase(){
-  if(!CFG.sbUrl||!CFG.sbKey) return;
+async function pushToSupabase(){
+  if(!SB_OK) return;
+  try{ await sbFetch('POST','store',{key:'main',value:JSON.stringify({portfolios,dividends,assetCls,assetTgt})}); }catch(e){}
+}
+
+async function pullFromSupabase(){
   try{
-    const r = await sbFetch('GET','store?key=eq.portfolio_data&select=value');
+    const r=await sbFetch('GET','store?key=eq.main&select=value');
     if(!r.ok) return;
-    const data = await r.json();
-    if(!data.length) return;
-    const stored = JSON.parse(data[0].value);
-    if(stored.portfolios) portfolios = stored.portfolios;
-    if(stored.dividends)  dividends  = stored.dividends;
-    if(stored.assetCls)   assetCls   = stored.assetCls;
-    if(stored.assetTgt)   assetTgt   = stored.assetTgt;
-    save();
-    renderAll();
-    showToast('Data gesynchroniseerd vanuit cloud ☁');
+    const data=await r.json();
+    if(!data||!data.length) return;
+    const s=JSON.parse(data[0].value);
+    if(s.portfolios) portfolios=s.portfolios;
+    if(s.dividends)  dividends=s.dividends;
+    if(s.assetCls)   assetCls=s.assetCls;
+    if(s.assetTgt)   assetTgt=s.assetTgt;
+    saveLocal(); renderAll(); renderTxList();
+    showToast('☁ Data gesynchroniseerd vanuit cloud');
   }catch(e){}
 }
 
-// ═══════════════════════════════════════════
-// FINNHUB PRICE FETCHING
-// ═══════════════════════════════════════════
-async function fetchFinnhub(path){
-  if(!CFG.finnhub){ return null; }
+// ═══════════════════════════════════
+// PRIJS OPHALEN
+// ═══════════════════════════════════
+// ── Alpha Vantage ──────────────────────────────────────────────────
+// Tries symbol as-is, then with Euronext suffixes
+// Returns {price, chg, chgP, source} or null
+async function fetchAlphaVantage(sym){
+  if(!CFG.av) return null;
+  const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${encodeURIComponent(sym)}&apikey=${CFG.av}`;
   try{
-    const r = await fetch(`https://finnhub.io/api/v1/${path}&token=${CFG.finnhub}`,
-      {signal: AbortSignal.timeout(8000)});
+    const r=await fetch(url,{signal:AbortSignal.timeout(10000)});
     if(!r.ok) return null;
-    return r.json();
+    const d=await r.json();
+    const q=d['Global Quote'];
+    if(!q||!q['05. price']||q['05. price']==='0.0000') return null;
+    const price=parseFloat(q['05. price']);
+    const chg=parseFloat(q['09. change']||0);
+    const chgP=parseFloat((q['10. change percent']||'0%').replace('%',''));
+    return {price,chg,chgP,source:'Alpha Vantage'};
   }catch(e){ return null; }
 }
 
-async function fetchPrice(ticker){
-  // Finnhub quote: returns c=current, pc=prevClose, d=change, dp=changePercent
-  const data = await fetchFinnhub(`quote?symbol=${encodeURIComponent(ticker)}`);
-  if(!data || !data.c || data.c===0) return null;
-  return { price: data.c, chg: data.d||0, chgP: data.dp||0, pc: data.pc||data.c };
+// ── CoinGecko (crypto + goud/zilver) ───────────────────────────────
+async function fetchCoinGecko(ticker){
+  const id=CGMAP[ticker.toUpperCase()];
+  if(!id) return null;
+  try{
+    const r=await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=eur&include_24hr_change=true`,{signal:AbortSignal.timeout(8000)});
+    if(!r.ok) return null;
+    const d=await r.json();
+    if(!d[id]||!d[id].eur) return null;
+    return {price:d[id].eur,chg:0,chgP:d[id].eur_24h_change||0,source:'CoinGecko'};
+  }catch(e){ return null; }
 }
 
-async function fetchHistorical(ticker, fromDate){
-  // Finnhub candles: D resolution
-  const from = Math.floor(new Date(fromDate).getTime()/1000);
-  const to   = Math.floor(Date.now()/1000);
-  const data = await fetchFinnhub(`stock/candle?symbol=${encodeURIComponent(ticker)}&resolution=D&from=${from}&to=${to}`);
-  if(!data || data.s!=='ok' || !data.t) return null;
-  // Returns {t:[timestamps], c:[closes]}
-  const result = {};
-  data.t.forEach((ts,i)=>{
-    const d = new Date(ts*1000).toISOString().slice(0,10);
-    result[d] = data.c[i];
-  });
-  return result; // { 'YYYY-MM-DD': price }
+// ── Finnhub (fallback) ──────────────────────────────────────────────
+async function fetchFinnhub(sym){
+  if(!CFG.finnhub) return null;
+  try{
+    const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(sym)}&token=${CFG.finnhub}`,{signal:AbortSignal.timeout(7000)});
+    if(!r.ok) return null;
+    const d=await r.json();
+    if(!d||!d.c||d.c===0) return null;
+    return {price:d.c,chg:d.d||0,chgP:d.dp||0,source:'Finnhub'};
+  }catch(e){ return null; }
 }
+
+// ── Master fetch — probeert alle bronnen op volgorde ───────────────
+async function fetchPrice(ticker){
+  const t=ticker.toUpperCase();
+
+  // 1. Crypto & precious metals via CoinGecko (altijd gratis)
+  if(CGMAP[t]){ const cg=await fetchCoinGecko(t); if(cg) return cg; }
+
+  // 2. Alpha Vantage — probeer ticker direct
+  if(CFG.av){
+    const av=await fetchAlphaVantage(t); if(av) return av;
+    // Euronext Amsterdam
+    const avAS=await fetchAlphaVantage(t+'.AS'); if(avAS) return {...avAS,source:'Alpha Vantage .AS'};
+    // Euronext Brussel
+    const avBR=await fetchAlphaVantage(t+'.BR'); if(avBR) return {...avBR,source:'Alpha Vantage .BR'};
+    // London
+    const avL=await fetchAlphaVantage(t+'.L'); if(avL) return {...avL,source:'Alpha Vantage .L'};
+  }
+
+  // 3. Finnhub als fallback
+  if(CFG.finnhub){
+    const fh=await fetchFinnhub(t); if(fh) return fh;
+    const fhAS=await fetchFinnhub(t+'.AS'); if(fhAS) return {...fhAS,source:'Finnhub .AS'};
+    const fhBR=await fetchFinnhub(t+'.BR'); if(fhBR) return {...fhBR,source:'Finnhub .BR'};
+  }
+
+  return null;
+}
+
+// Historische data (voor grafiek)
+async function fetchHistoryCG(ticker, days){
+  const id=CGMAP[ticker.toUpperCase()];
+  if(!id) return null;
+  try{
+    const r=await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=eur&days=${days}`,{signal:AbortSignal.timeout(10000)});
+    if(!r.ok) return null;
+    const d=await r.json();
+    const res={};
+    (d.prices||[]).forEach(([ts,p])=>{ res[new Date(ts).toISOString().slice(0,10)]=p; });
+    return res;
+  }catch(e){ return null; }
+}
+
+async function fetchHistoryFH(ticker, fromDate){
+  if(!CFG.finnhub) return null;
+  const from=Math.floor(new Date(fromDate).getTime()/1000);
+  const to=Math.floor(Date.now()/1000);
+  try{
+    const r=await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${encodeURIComponent(ticker)}&resolution=D&from=${from}&to=${to}&token=${CFG.finnhub}`,{signal:AbortSignal.timeout(10000)});
+    if(!r.ok) return null;
+    const d=await r.json();
+    if(!d||d.s!=='ok'||!d.t) return null;
+    const res={};
+    d.t.forEach((ts,i)=>{ res[new Date(ts*1000).toISOString().slice(0,10)]=d.c[i]; });
+    return res;
+  }catch(e){ return null; }
+}
+
+// ═══════════════════════════════════
+// BENCHMARK — correct geïndexeerd
+// ═══════════════════════════════════
+let benchHistory=null;
 
 async function loadBenchmark(){
-  const sym = document.getElementById('bench-sym')?.value?.trim();
-  if(!sym||!CFG.finnhub){ benchHistory=null; renderLine(); return; }
-  const hist = getPortfolioHistory();
+  const sym=(document.getElementById('bench-sym')?.value||'').trim();
+  if(!sym){ benchHistory=null; renderLine(); return; }
+  const hist=getPortfolioHistory();
   if(!hist.length){ benchHistory=null; renderLine(); return; }
-  const from = hist[0].date;
-  const data = await fetchHistorical(sym, from);
-  if(!data){ benchHistory=null; renderLine(); return; }
-  const entries = Object.entries(data).sort((a,b)=>a[0].localeCompare(b[0]));
-  const base = entries[0]?.[1]||1;
-  benchHistory = {
-    labels: entries.map(e=>e[0]),
-    vals:   entries.map(e=>parseFloat(((e[1]/base)*100).toFixed(2)))
+  const fromDate=hist[0].date;
+  const days=Math.ceil((Date.now()-new Date(fromDate).getTime())/(86400000));
+
+  let data=null;
+  // Probeer CoinGecko voor crypto benchmark
+  if(CGMAP[sym.toUpperCase()]) data=await fetchHistoryCG(sym,days);
+  // Anders Finnhub
+  if(!data) data=await fetchHistoryFH(sym,fromDate);
+  if(!data && CFG.finnhub){ data=await fetchHistoryFH(sym+'.AS',fromDate); }
+
+  if(!data||!Object.keys(data).length){ benchHistory=null; renderLine(); return; }
+
+  const entries=Object.entries(data).sort((a,b)=>a[0].localeCompare(b[0]));
+  // Normaliseer: eerste dag = 100
+  const base=entries[0][1]||1;
+  benchHistory={
+    labels:entries.map(e=>e[0]),
+    vals:entries.map(e=>parseFloat(((e[1]/base)*100).toFixed(3)))
   };
   renderLine();
 }
 
 async function syncPrices(){
-  if(!CFG.finnhub){
-    openApiModal();
-    showToast('Stel eerst je Finnhub API key in');
-    return;
-  }
-  const positions = getPositions();
+  const positions=getPositions();
   if(!positions.length){ showToast('Geen posities om te verversen.'); return; }
   const btn=document.getElementById('sync-btn');
   const ico=document.getElementById('sync-ico');
   btn.classList.add('syncing'); ico.classList.add('spin');
   let ok=0,fail=0;
   for(const p of positions){
-    const q = await fetchPrice(p.ticker);
-    if(q){ prices[p.ticker]=q; ok++; }
+    const q=await fetchPrice(p.ticker);
+    if(q){ prices[p.ticker]={...q,ts:Date.now()}; ok++; }
     else fail++;
   }
-  prices['_ts'] = Date.now();
-  save();
-  const now = new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'});
+  prices['_ts']=Date.now();
+  saveLocal();
+  const now=new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'});
   document.getElementById('last-sync').textContent='Bijgewerkt: '+now;
-  const badge = document.getElementById('live-badge');
-  badge.className = 'badge '+(fail===0?'live':'stale');
-  badge.innerHTML = `<span class="pulse"></span>${fail===0?'Live':'Gedeeltelijk'} · ${now}`;
+  const badge=document.getElementById('live-badge');
+  badge.className='badge '+(fail===0?'live':'stale');
+  badge.innerHTML=`<span class="pulse"></span>${fail===0?'Live':'Gedeeltelijk'} · ${now}`;
   btn.classList.remove('syncing'); ico.classList.remove('spin');
-  showToast(`${ok} ticker${ok!==1?'s':''} bijgewerkt${fail?' · '+fail+' mislukt':''}`);
+  showToast(`${ok} ticker${ok!==1?'s':''} bijgewerkt${fail?` · ${fail} mislukt`:''}`);
   renderAll();
-  if(SB) syncToSupabase();
+  if(SB_OK) pushToSupabase();
 }
 
-// ═══════════════════════════════════════════
-// NAVIGATION
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// NAVIGATIE
+// ═══════════════════════════════════
+let selectedRange='MAX';
+let pieChart=null,lineChart=null,apChart=null,abChart=null,dbChart=null,dyChart=null;
+
 function goTo(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   const map={dashboard:0,assets:1,dividends:2,transactions:3,portfolios:4};
   document.querySelectorAll('.ni')[map[id]].classList.add('active');
-  const el=document.getElementById('pf-name-sub');
-  if(el) el.textContent = portfolios.length>1?pf().name:'Overzicht van je portefeuille';
-  if(id==='assets') renderAssets();
-  if(id==='dividends') renderDivPage();
+  const sub=document.getElementById('pf-sub');
+  if(sub) sub.textContent=portfolios.length>1?pf().name:'Overzicht van je portefeuille';
+  if(id==='assets')       renderAssets();
+  if(id==='dividends')    renderDivPage();
   if(id==='transactions') renderTxList();
-  if(id==='portfolios') renderPfPage();
+  if(id==='portfolios')   renderPfPage();
 }
 
-// ═══════════════════════════════════════════
-// POSITIONS
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// POSITIES & KOSTENBASIS (CORRECT)
+// ═══════════════════════════════════
 function getPositions(){
   const pos={};
   [...txs()].sort((a,b)=>a.date.localeCompare(b.date)).forEach(tx=>{
-    if(!pos[tx.ticker]) pos[tx.ticker]={ticker:tx.ticker,name:tx.name||tx.ticker,qty:0,cost:0,fees:0};
+    if(!pos[tx.ticker]) pos[tx.ticker]={ticker:tx.ticker,name:tx.name||tx.ticker,qty:0,costBasis:0,totalFees:0};
     if(tx.type==='BUY'){
-      pos[tx.ticker].qty  += tx.qty;
-      pos[tx.ticker].cost += tx.qty*tx.price+(tx.fee||0);
-      pos[tx.ticker].fees += tx.fee||0;
-    } else {
-      const ac = pos[tx.ticker].qty ? pos[tx.ticker].cost/pos[tx.ticker].qty : 0;
-      pos[tx.ticker].qty  -= tx.qty;
-      pos[tx.ticker].cost -= tx.qty*ac;
+      // Kostenbasis = aankoopprijs × aantal + transactiekosten
+      pos[tx.ticker].qty       += tx.qty;
+      pos[tx.ticker].costBasis += tx.qty * tx.price + (tx.fee||0);
+      pos[tx.ticker].totalFees += tx.fee||0;
+    } else if(tx.type==='SELL'){
+      // Bij verkoop: verminder kostenbasis proportioneel (FIFO-benadering)
+      const avgCostPerUnit = pos[tx.ticker].qty ? pos[tx.ticker].costBasis / pos[tx.ticker].qty : 0;
+      pos[tx.ticker].qty       -= tx.qty;
+      pos[tx.ticker].costBasis -= tx.qty * avgCostPerUnit;
+      if(pos[tx.ticker].qty < 0.000001) { pos[tx.ticker].qty=0; pos[tx.ticker].costBasis=0; }
     }
   });
   return Object.values(pos).filter(p=>p.qty>0.000001);
 }
 
-function livePrice(t){ return prices[t]?.price||null; }
-function avgCost(p){ return p.qty?p.cost/p.qty:0; }
+function lp(t){ return prices[t]?.price||null; }
+function avgCostPerUnit(p){ return p.qty>0 ? p.costBasis/p.qty : 0; }
 
-// ═══════════════════════════════════════════
-// PORTFOLIO HISTORY (correct step-by-step)
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// PORTFOLIO HISTORIEK
+// ═══════════════════════════════════
 function getPortfolioHistory(){
   const sorted=[...txs()].sort((a,b)=>a.date.localeCompare(b.date));
   if(!sorted.length) return [];
@@ -639,10 +716,8 @@ function getPortfolioHistory(){
   const days=[];
   for(let d=new Date(first);d<=today;d.setDate(d.getDate()+1))
     days.push(new Date(d).toISOString().slice(0,10));
-
   const txByDate={};
   sorted.forEach(tx=>{ if(!txByDate[tx.date]) txByDate[tx.date]=[]; txByDate[tx.date].push(tx); });
-
   const pos={};
   const hist=[];
   for(const day of days){
@@ -654,9 +729,8 @@ function getPortfolioHistory(){
     let val=0;
     const isToday=day===days[days.length-1];
     Object.entries(pos).forEach(([t,v])=>{
-      // For today: use live price if available; else use last known transaction price
-      const p = isToday && prices[t] ? prices[t].price : v.lastPrice;
-      val += v.qty*p;
+      const price=isToday&&prices[t]?prices[t].price:v.lastPrice;
+      val+=v.qty*price;
     });
     if(val>0) hist.push({date:day,value:parseFloat(val.toFixed(2))});
   }
@@ -673,13 +747,12 @@ function filterHist(hist){
   else if(selectedRange==='YTD') cut=new Date(today.getFullYear(),0,1);
   else cut=first;
   if(cut<first) cut=first;
-  const cs=cut.toISOString().slice(0,10);
-  return hist.filter(h=>h.date>=cs);
+  return hist.filter(h=>h.date>=cut.toISOString().slice(0,10));
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // FORMAT
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function fmt(n){ return '€'+parseFloat(n||0).toLocaleString('nl-BE',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function fmtPct(n){ return (n>=0?'+':'')+parseFloat(n||0).toFixed(2)+'%'; }
 function fmtS(n){
@@ -689,32 +762,42 @@ function fmtS(n){
   return fmt(v);
 }
 
-// ═══════════════════════════════════════════
-// RENDER METRICS
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// METRICS (correct kostenbasis)
+// ═══════════════════════════════════
 function renderMetrics(positions){
-  let tv=0,tc=0;
-  positions.forEach(p=>{ const pr=livePrice(p.ticker)??avgCost(p); tv+=p.qty*pr; tc+=p.cost; });
-  const pnl=tv-tc, pct=tc?pnl/tc*100:0;
+  let tv=0, totalInvested=0, totalFees=0;
+  positions.forEach(p=>{
+    const price=lp(p.ticker)??avgCostPerUnit(p);
+    tv            += p.qty*price;
+    totalInvested += p.costBasis;
+    totalFees     += p.totalFees||0;
+  });
+  const pnl=tv-totalInvested;
+  const pct=totalInvested?pnl/totalInvested*100:0;
   const divTot=myDivs().reduce((s,d)=>s+d.amount,0);
-  const divYld=tc?divTot/tc*100:0;
+  const divYld=totalInvested?divTot/totalInvested*100:0;
+  const feePct=totalInvested?totalFees/totalInvested*100:0;
   document.getElementById('m-total').textContent=fmtS(tv);
-  document.getElementById('m-cost').textContent=fmtS(tc);
+  document.getElementById('m-total-chg').textContent='';
+  document.getElementById('m-cost').textContent=totalFees>0?fmtS(totalFees):'€0,00';
+  const cp=document.getElementById('m-cost-pct');
+  if(cp) cp.textContent=feePct>0?'-'+feePct.toFixed(3)+'% van investering':'Geen kosten geregistreerd';
   document.getElementById('m-pnl').textContent=fmtS(pnl);
   const pe=document.getElementById('m-pct'); pe.textContent=fmtPct(pct); pe.className='chg '+(pnl>=0?'pos':'neg');
   document.getElementById('m-div').textContent=fmtS(divTot);
-  document.getElementById('m-div-y').textContent=divYld.toFixed(2)+'% yield on cost';
+  document.getElementById('m-divy').textContent=divYld.toFixed(2)+'% yield on cost';
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // PIE CHART
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function renderPie(positions){
   const ctx=document.getElementById('pie-c').getContext('2d');
   const labels=[],vals=[],colors=[];
   let total=0;
   positions.forEach((p,i)=>{
-    const pr=livePrice(p.ticker)??avgCost(p), mv=p.qty*pr;
+    const price=lp(p.ticker)??avgCostPerUnit(p), mv=p.qty*price;
     labels.push(p.ticker); vals.push(parseFloat(mv.toFixed(2))); colors.push(PC[i%PC.length]); total+=mv;
   });
   document.getElementById('dc-t').textContent=fmtS(total);
@@ -729,9 +812,9 @@ function renderPie(positions){
     `<span><span class="ld" style="background:${colors[i]}"></span>${l} ${(vals[i]/total*100).toFixed(1)}%</span>`).join('');
 }
 
-// ═══════════════════════════════════════════
-// LINE CHART
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// LINE CHART — beide geïndexeerd op 100
+// ═══════════════════════════════════
 function buildRangeBtns(){
   const el=document.getElementById('rrow'); el.innerHTML='';
   ['1W','1M','6M','1Y','YTD','MAX'].forEach(r=>{
@@ -743,70 +826,106 @@ function buildRangeBtns(){
 }
 
 function renderLine(){
-  const hist=getPortfolioHistory(), filt=filterHist(hist);
+  const hist=getPortfolioHistory();
+  const filt=filterHist(hist);
   const showB=document.getElementById('bench-on')?.checked;
   const ctx=document.getElementById('line-c').getContext('2d');
   if(lineChart) lineChart.destroy();
   document.getElementById('line-leg').innerHTML='';
   if(!filt.length) return;
 
-  const labels=filt.map(h=>h.date), portVals=filt.map(h=>h.value);
-  const base=portVals[0]||1;
-  const normPort = showB ? portVals.map(v=>parseFloat((v/base*100).toFixed(2))) : portVals;
-  const up=portVals[portVals.length-1]>=portVals[0];
-  const pc=up?'#00d4a0':'#ff5b6b', pf=up?'rgba(0,212,160,0.07)':'rgba(255,91,107,0.07)';
+  const labels=filt.map(h=>h.date);
+  const portVals=filt.map(h=>h.value); // absolute € waarde
+  const portStart=portVals[0]||1;
 
-  const datasets=[{label:'Portefeuille',data:normPort,borderColor:pc,backgroundColor:pf,borderWidth:2,pointRadius:0,fill:true,tension:0.3}];
+  const up=portVals[portVals.length-1]>=portStart;
+  const portColor=up?'#00d4a0':'#ff5b6b';
+  const portFill=up?'rgba(0,212,160,0.07)':'rgba(255,91,107,0.07)';
 
+  const datasets=[{
+    label:'Portefeuille',
+    data:portVals,
+    borderColor:portColor, backgroundColor:portFill,
+    borderWidth:2, pointRadius:0, fill:true, tension:0.3
+  }];
+
+  let hasBench=false;
   if(showB && benchHistory){
     const s=labels[0], e=labels[labels.length-1];
-    const bFilt=benchHistory.labels.map((l,i)=>({l,v:benchHistory.vals[i]})).filter(x=>x.l>=s&&x.l<=e);
-    if(bFilt.length){
-      const bBase=bFilt[0].v||1;
-      const bMap={}; bFilt.forEach((x,i)=>bMap[x.l]=parseFloat((x.v/bBase*100).toFixed(2)));
-      datasets.push({label:document.getElementById('bench-sym').value||'Benchmark',
-        data:labels.map(d=>bMap[d]??null),spanGaps:true,
-        borderColor:'#a78bfa',backgroundColor:'transparent',borderWidth:1.5,borderDash:[5,4],pointRadius:0,fill:false,tension:0.3});
+    const bFiltered=benchHistory.labels
+      .map((l,i)=>({l,v:benchHistory.vals[i]}))
+      .filter(x=>x.l>=s&&x.l<=e);
+    if(bFiltered.length){
+      // Normaliseer benchmark zodat hij op dezelfde startwaarde begint als de portefeuille
+      // Dit toont "wat zou €X in IWDA nu waard zijn?"
+      const bBase=bFiltered[0].v||1;
+      const bMap={};
+      bFiltered.forEach(x=>bMap[x.l]=parseFloat(((x.v/bBase)*portStart).toFixed(2)));
+      datasets.push({
+        label:document.getElementById('bench-sym').value||'Benchmark',
+        data:labels.map(d=>bMap[d]??null), spanGaps:true,
+        borderColor:'#a78bfa', backgroundColor:'transparent',
+        borderWidth:1.8, borderDash:[5,4], pointRadius:0, fill:false, tension:0.3
+      });
+      hasBench=true;
     }
   }
 
   const bSym=document.getElementById('bench-sym')?.value||'Benchmark';
-  document.getElementById('line-leg').innerHTML=
-    `<span><span class="ld" style="background:${pc}"></span>Portefeuille</span>`
-    +(showB&&benchHistory?`<span><span class="ld" style="background:#a78bfa;border-radius:0"></span>${bSym}</span>`:'');
+  const legEl=document.getElementById('line-leg');
+  legEl.innerHTML=
+    `<span><span class="ld" style="background:${portColor}"></span>Portefeuille (€)</span>`
+    +(hasBench?`<span><span class="ld" style="background:#a78bfa;border-radius:0"></span>${bSym} (zelfde startwaarde)</span>`:'');
 
   lineChart=new Chart(ctx,{type:'line',data:{labels,datasets},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:c=>showB?' '+c.dataset.label+': '+(c.raw?.toFixed(2)||''):' '+c.dataset.label+': '+fmt(c.raw)}}},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{
+          label:c=>' '+c.dataset.label+': '+fmt(c.raw)
+        }}
+      },
       scales:{
         x:{ticks:{maxTicksLimit:7,color:'#555870',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
-        y:{ticks:{color:'#555870',font:{size:10},callback:v=>showB?v.toFixed(0):fmtS(v)},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}}
-      }}
+        y:{ticks:{color:'#555870',font:{size:10},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}}
+      }
+    }
   });
 }
 
-// ═══════════════════════════════════════════
-// POSITIONS TABLE
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// POSITIETABEL
+// ═══════════════════════════════════
 function renderPosTable(positions){
   const el=document.getElementById('pos-tbl');
-  if(!positions.length){ el.innerHTML='<div class="empty">Geen open posities.</div>'; return; }
+  if(!positions.length){ el.innerHTML='<div class="empty">Geen open posities. Voeg een transactie toe.</div>'; return; }
   const rows=positions.map(p=>{
-    const ac=avgCost(p), lp=livePrice(p.ticker), pr=lp??ac;
-    const mv=p.qty*pr, pnl=mv-p.cost, pct=p.cost?pnl/p.cost*100:0;
-    const chg=prices[p.ticker]?.chg, chgP=prices[p.ticker]?.chgP;
+    const acu=avgCostPerUnit(p);
+    const livePr=lp(p.ticker);
+    const price=livePr??acu;
+    const mv=p.qty*price;
+    // P&L = marktwaarde - kostenbasis (aankoopprijs + kosten)
+    const pnl=mv-p.costBasis;
+    const pct=p.costBasis?pnl/p.costBasis*100:0;
+    const chgP=prices[p.ticker]?.chgP;
+    const src=prices[p.ticker]?.source||'';
     const divT=myDivs().filter(d=>d.ticker===p.ticker).reduce((s,d)=>s+d.amount,0);
-    const totRet=pnl+divT, totPct=p.cost?(totRet/p.cost*100):0;
-    const chgCell=chg!=null
-      ? `<span style="color:${chg>=0?'var(--green)':'var(--red)'};font-size:11px">${chg>=0?'+':''}${chg.toFixed(2)} (${chgP>=0?'+':''}${chgP.toFixed(2)}%)</span>`
-      : '';
+    const totRet=pnl+divT;
+    const totPct=p.costBasis?totRet/p.costBasis*100:0;
+
+    const priceCell=livePr
+      ?`${fmt(livePr)}<span class="src">${src}</span>${chgP!=null?`<br><span style="font-size:11px;color:${chgP>=0?'var(--green)':'var(--red)'}">${chgP>=0?'+':''}${chgP.toFixed(2)}% vandaag</span>`:''}`
+      :`<span style="color:var(--text3);font-size:11px">⟳ laden...</span>`;
+
     return `<tr>
-      <td class="mono" style="font-weight:500">${p.ticker}</td>
+      <td style="font-family:'DM Mono',monospace;font-weight:500">${p.ticker}</td>
       <td style="color:var(--text2);font-size:12px">${p.name}</td>
       <td class="num">${p.qty.toLocaleString('nl-BE',{maximumFractionDigits:6})}</td>
-      <td class="num">${fmt(ac)}</td>
-      <td class="num">${lp?`${fmt(lp)}<br>${chgCell}`:'<span style="color:var(--text3);font-size:11px">—</span>'}</td>
+      <td class="num">${fmt(acu)}</td>
+      <td class="num">${fmt(p.costBasis)}</td>
+      <td class="num">${priceCell}</td>
       <td class="num">${fmt(mv)}</td>
       <td class="${pnl>=0?'pos':'neg'}">${fmt(pnl)}<br><span style="font-size:11px">${fmtPct(pct)}</span></td>
       <td class="pos">${divT>0?fmt(divT):'—'}</td>
@@ -815,20 +934,24 @@ function renderPosTable(positions){
   }).join('');
   el.innerHTML=`<table><thead><tr>
     <th>Ticker</th><th>Naam</th><th style="text-align:right">Aantal</th>
-    <th style="text-align:right">Gem. kostprijs</th><th style="text-align:right">Live prijs</th>
-    <th style="text-align:right">Marktwaarde</th><th style="text-align:right">P&L</th>
-    <th style="text-align:right">Dividend</th><th style="text-align:right">Totaal rendement</th>
+    <th style="text-align:right">Gem. aankoopprijs</th>
+    <th style="text-align:right">Aankoopwaarde</th>
+    <th style="text-align:right">Live prijs</th>
+    <th style="text-align:right">Marktwaarde</th>
+    <th style="text-align:right">P&L</th>
+    <th style="text-align:right">Dividend</th>
+    <th style="text-align:right">Totaal rendement</th>
   </tr></thead><tbody>${rows}</tbody></table>`;
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // ASSET KLASSEN
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function renderAssets(){
   const positions=getPositions();
   const cats={}; let total=0;
   positions.forEach(p=>{
-    const pr=livePrice(p.ticker)??avgCost(p), mv=p.qty*pr;
+    const price=lp(p.ticker)??avgCostPerUnit(p), mv=p.qty*price;
     const cat=assetCls[p.ticker]||'Niet ingesteld';
     cats[cat]=(cats[cat]||0)+mv; total+=mv;
   });
@@ -840,8 +963,7 @@ function renderAssets(){
   if(apChart) apChart.destroy();
   apChart=new Chart(ctx1,{type:'doughnut',
     data:{labels:arr.map(a=>a[0]),datasets:[{data:arr.map(a=>parseFloat(a[1].toFixed(2))),backgroundColor:colors,borderWidth:2,borderColor:'#111318'}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.label+': '+fmt(c.raw)+' ('+(c.raw/total*100).toFixed(1)+'%)'}}}}
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+c.label+': '+fmt(c.raw)+' ('+(c.raw/total*100).toFixed(1)+'%)'}}}}
   });
   document.getElementById('ap-leg').innerHTML=arr.map(([cat,val],i)=>
     `<span><span class="ld" style="background:${colors[i]}"></span>${cat} ${(val/total*100).toFixed(1)}%</span>`).join('');
@@ -850,12 +972,9 @@ function renderAssets(){
   if(abChart) abChart.destroy();
   abChart=new Chart(ctx2,{type:'bar',
     data:{labels:arr.map(a=>a[0]),datasets:[{data:arr.map(a=>parseFloat(a[1].toFixed(2))),backgroundColor:colors,borderRadius:4,borderSkipped:false}]},
-    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.raw)}}},
-      scales:{
-        x:{ticks:{color:'#555870',font:{size:10},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
-        y:{ticks:{color:'#8b8fa8',font:{size:11}},grid:{display:false},border:{display:false}}
-      }}
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.raw)}}},
+      scales:{x:{ticks:{color:'#555870',font:{size:10},callback:v=>fmtS(v)},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}},
+        y:{ticks:{color:'#8b8fa8',font:{size:11}},grid:{display:false},border:{display:false}}}}
   });
 
   const el=document.getElementById('asset-tbl');
@@ -870,17 +989,17 @@ function renderAssets(){
       <input type="number" min="0" max="100" step="1" value="${tgt||''}" placeholder="Doel%"
         style="width:75px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:4px 8px;color:var(--text);font-size:12px;outline:none"
         onchange="setTgt('${cat}',this.value)">
-      <span style="font-size:11px;min-width:44px;color:${Math.abs(diff)<1?'var(--text3)':diff>0?'var(--green)':'var(--red)'}">${diff>=0?'+':''}${diff.toFixed(1)}%</span>
+      <span style="font-size:11px;min-width:50px;color:${Math.abs(diff)<1?'var(--text3)':diff>0?'var(--green)':'var(--red)'}">${diff>=0?'+':''}${diff.toFixed(1)}%</span>
       <div class="pbw"><div class="pb" style="width:${Math.min(100,cur).toFixed(1)}%;background:${ACC[i]}"></div></div>
     </div>`;
   });
-  html+='<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em">Categorie per positie</div>';
+  html+='<div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Categorie per positie</div>';
   positions.forEach(p=>{
     const sel=assetCls[p.ticker]||'';
     const opts=['',...AC].map(c=>`<option value="${c}" ${c===sel?'selected':''}>${c||'— Kies —'}</option>`).join('');
     html+=`<div class="txr">
       <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-family:'DM Mono',monospace;font-weight:500;min-width:60px">${p.ticker}</span>
+        <span style="font-family:'DM Mono',monospace;font-weight:500;min-width:70px">${p.ticker}</span>
         <span style="color:var(--text2);font-size:12px">${p.name}</span>
       </div>
       <select onchange="setAC('${p.ticker}',this.value)"
@@ -892,12 +1011,12 @@ function renderAssets(){
   el.innerHTML=html;
 }
 
-function setAC(t,v){ if(v) assetCls[t]=v; else delete assetCls[t]; save(); renderAssets(); showToast(t+' → '+(v||'Verwijderd')); if(SB) syncToSupabase(); }
-function setTgt(c,v){ const n=parseFloat(v)||0; if(n>0) assetTgt[c]=n; else delete assetTgt[c]; save(); if(SB) syncToSupabase(); }
+function setAC(t,v){ if(v) assetCls[t]=v; else delete assetCls[t]; saveLocal(); if(SB_OK) pushToSupabase(); renderAssets(); showToast(t+' → '+(v||'Verwijderd')); }
+function setTgt(c,v){ const n=parseFloat(v)||0; if(n>0) assetTgt[c]=n; else delete assetTgt[c]; saveLocal(); if(SB_OK) pushToSupabase(); }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // DIVIDENDEN
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function addDiv(){
   const tick=document.getElementById('d-tick').value.trim().toUpperCase();
   const amt=parseFloat(document.getElementById('d-amt').value);
@@ -905,10 +1024,9 @@ function addDiv(){
   const desc=document.getElementById('d-desc').value.trim();
   const msg=document.getElementById('d-msg');
   if(!tick||!amt||!date){ msg.className='msg err'; msg.textContent='Vul ticker, bedrag en datum in.'; return; }
-  if(amt<=0){ msg.className='msg err'; msg.textContent='Bedrag moet positief zijn.'; return; }
   dividends.push({id:Date.now(),ticker:tick,amount:amt,date,desc,pfId:activeId});
   dividends.sort((a,b)=>a.date.localeCompare(b.date));
-  save(); if(SB) syncToSupabase();
+  saveLocal(); if(SB_OK) pushToSupabase();
   msg.className='msg ok'; msg.textContent='✓ Toegevoegd';
   ['d-tick','d-amt','d-desc'].forEach(id=>document.getElementById(id).value='');
   setTimeout(()=>msg.textContent='',3000);
@@ -918,18 +1036,16 @@ function addDiv(){
 function delDiv(id){
   if(!confirm('Dividend verwijderen?')) return;
   dividends=dividends.filter(d=>d.id!==id);
-  save(); if(SB) syncToSupabase(); renderDivPage(); renderMetrics(getPositions());
+  saveLocal(); if(SB_OK) pushToSupabase(); renderDivPage(); renderMetrics(getPositions());
 }
 
 function renderDivPage(){
   const divs=myDivs();
-  const positions=getPositions();
-  const tc=positions.reduce((s,p)=>s+p.cost,0);
+  const tc=getPositions().reduce((s,p)=>s+p.costBasis,0);
   const tot=divs.reduce((s,d)=>s+d.amount,0);
   const yr=new Date().getFullYear();
-  const yrTot=divs.filter(d=>d.date.startsWith(yr)).reduce((s,d)=>s+d.amount,0);
   document.getElementById('dv-tot').textContent=fmt(tot);
-  document.getElementById('dv-yr').textContent=fmt(yrTot);
+  document.getElementById('dv-yr').textContent=fmt(divs.filter(d=>d.date.startsWith(yr)).reduce((s,d)=>s+d.amount,0));
   document.getElementById('dv-yoc').textContent=(tc?tot/tc*100:0).toFixed(2)+'%';
 
   const byT={}; divs.forEach(d=>byT[d.ticker]=(byT[d.ticker]||0)+d.amount);
@@ -971,9 +1087,9 @@ function renderDivPage(){
     </div>`).join('');
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // TRANSACTIES
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function addTx(){
   const type=document.getElementById('tx-type').value;
   const tick=document.getElementById('tx-tick').value.trim().toUpperCase();
@@ -987,7 +1103,7 @@ function addTx(){
   if(qty<=0||price<=0){ msg.className='msg err'; msg.textContent='Aantal en prijs moeten positief zijn.'; return; }
   pf().transactions.push({type,ticker:tick,name,qty,price,fee,date});
   pf().transactions.sort((a,b)=>a.date.localeCompare(b.date));
-  save(); if(SB) syncToSupabase();
+  saveLocal(); if(SB_OK) pushToSupabase();
   msg.className='msg ok'; msg.textContent='✓ Toegevoegd';
   ['tx-tick','tx-name','tx-qty','tx-price'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('tx-fee').value='0';
@@ -997,7 +1113,7 @@ function addTx(){
 
 function delTx(i){
   if(!confirm('Transactie verwijderen?')) return;
-  pf().transactions.splice(i,1); save(); if(SB) syncToSupabase(); renderAll(); renderTxList();
+  pf().transactions.splice(i,1); saveLocal(); if(SB_OK) pushToSupabase(); renderAll(); renderTxList();
 }
 
 function renderTxList(){
@@ -1020,24 +1136,64 @@ function renderTxList(){
   }).join('');
 }
 
-// ═══════════════════════════════════════════
-// PORTFOLIOS
-// ═══════════════════════════════════════════
-function createPf(){
-  const name=prompt('Naam voor nieuwe portefeuille:');
-  if(!name?.trim()) return;
-  const id='pf_'+Date.now();
-  portfolios.push({id,name:name.trim(),transactions:[],created:Date.now()});
-  save(); renderPfPage();
+// ═══════════════════════════════════
+// PORTEFEUILLES — met modal (geen prompt)
+// ═══════════════════════════════════
+let pfModalMode='new', pfModalTargetId=null;
+
+function openPfModal(mode='new', id=null, currentName=''){
+  pfModalMode=mode; pfModalTargetId=id;
+  const title=document.getElementById('pf-modal-title');
+  const sub=document.getElementById('pf-modal-sub');
+  const nameEl=document.getElementById('pf-modal-name');
+  const confirm=document.getElementById('pf-modal-confirm');
+  if(mode==='new'){
+    title.textContent='Nieuwe portefeuille';
+    sub.textContent='Kies een naam voor je portefeuille.';
+    nameEl.value='';
+    confirm.textContent='Aanmaken';
+  } else {
+    title.textContent='Hernoemen';
+    sub.textContent='Voer een nieuwe naam in.';
+    nameEl.value=currentName;
+    confirm.textContent='Opslaan';
+  }
+  document.getElementById('pf-modal').classList.add('open');
+  setTimeout(()=>nameEl.focus(),100);
 }
-function switchPf(id){ activeId=id; save(); renderAll(); renderTxList(); goTo('dashboard'); showToast('Portefeuille: '+pf().name); }
-function renamePf(id){ const p=portfolios.find(x=>x.id===id); const n=prompt('Nieuwe naam:',p.name); if(!n?.trim()) return; p.name=n.trim(); save(); renderPfPage(); }
+
+function closePfModal(){ document.getElementById('pf-modal').classList.remove('open'); }
+document.getElementById('pf-modal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closePfModal(); });
+document.getElementById('pf-modal-name').addEventListener('keydown',e=>{ if(e.key==='Enter') confirmPfModal(); });
+
+function confirmPfModal(){
+  const name=document.getElementById('pf-modal-name').value.trim();
+  if(!name){ document.getElementById('pf-modal-name').style.borderColor='var(--red)'; return; }
+  document.getElementById('pf-modal-name').style.borderColor='';
+  if(pfModalMode==='new'){
+    const id='pf_'+Date.now();
+    portfolios.push({id,name,transactions:[],created:Date.now()});
+    showToast('Portefeuille "'+name+'" aangemaakt');
+  } else {
+    const p=portfolios.find(x=>x.id===pfModalTargetId);
+    if(p){ p.name=name; showToast('Hernoemd naar "'+name+'"'); }
+  }
+  saveLocal(); if(SB_OK) pushToSupabase();
+  closePfModal(); renderPfPage();
+}
+
+function switchPf(id){
+  activeId=id; saveLocal(); renderAll(); renderTxList(); goTo('dashboard');
+  showToast('Portefeuille: '+pf().name);
+}
+
 function delPf(id){
   if(portfolios.length<=1){ showToast('Minimaal één portefeuille vereist.'); return; }
-  if(!confirm('Portefeuille verwijderen inclusief alle transacties?')) return;
-  portfolios=portfolios.filter(p=>p.id!==id);
+  const p=portfolios.find(x=>x.id===id);
+  if(!confirm(`Portefeuille "${p.name}" en alle transacties verwijderen?`)) return;
+  portfolios=portfolios.filter(x=>x.id!==id);
   if(activeId===id) activeId=portfolios[0].id;
-  save(); renderPfPage(); renderAll();
+  saveLocal(); if(SB_OK) pushToSupabase(); renderPfPage(); renderAll();
 }
 
 function renderPfPage(){
@@ -1045,16 +1201,20 @@ function renderPfPage(){
     const isAct=p.id===activeId;
     const pos={}; let tv=0,tc=0;
     p.transactions.forEach(tx=>{
-      if(!pos[tx.ticker]) pos[tx.ticker]={qty:0,cost:0};
-      if(tx.type==='BUY'){ pos[tx.ticker].qty+=tx.qty; pos[tx.ticker].cost+=tx.qty*tx.price+(tx.fee||0); }
-      else { const ac=pos[tx.ticker].qty?pos[tx.ticker].cost/pos[tx.ticker].qty:0; pos[tx.ticker].qty-=tx.qty; pos[tx.ticker].cost-=tx.qty*ac; }
+      if(!pos[tx.ticker]) pos[tx.ticker]={qty:0,costBasis:0};
+      if(tx.type==='BUY'){ pos[tx.ticker].qty+=tx.qty; pos[tx.ticker].costBasis+=tx.qty*tx.price+(tx.fee||0); }
+      else{ const acu=pos[tx.ticker].qty?pos[tx.ticker].costBasis/pos[tx.ticker].qty:0; pos[tx.ticker].qty-=tx.qty; pos[tx.ticker].costBasis-=tx.qty*acu; }
     });
-    Object.entries(pos).forEach(([t,v])=>{ if(v.qty>0){ const pr=prices[t]?.price||(v.cost/v.qty); tv+=v.qty*pr; tc+=v.cost; } });
+    Object.entries(pos).forEach(([t,v])=>{
+      if(v.qty>0){ const pr=prices[t]?.price||(v.costBasis/v.qty); tv+=v.qty*pr; tc+=v.costBasis; }
+    });
     const pnl=tv-tc, pct=tc?pnl/tc*100:0;
     return `<div class="card" style="${isAct?'border-color:rgba(77,143,255,.35)':''}">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
         <div>
-          <div style="font-size:15px;font-weight:500;margin-bottom:3px">${p.name}${isAct?' <span style="font-size:10px;color:var(--blue);font-family:\'DM Mono\',monospace;background:var(--blueBg);padding:2px 6px;border-radius:4px">ACTIEF</span>':''}</div>
+          <div style="font-size:15px;font-weight:500;margin-bottom:3px">${p.name}
+            ${isAct?'<span style="font-size:10px;color:var(--blue);background:var(--blueBg);padding:2px 6px;border-radius:4px;font-family:\'DM Mono\',monospace;margin-left:6px">ACTIEF</span>':''}
+          </div>
           <div style="font-size:12px;color:var(--text3)">${p.transactions.length} transactie${p.transactions.length!==1?'s':''}</div>
         </div>
         <div style="text-align:right">
@@ -1062,45 +1222,51 @@ function renderPfPage(){
           <div style="font-size:12px;color:${pnl>=0?'var(--green)':'var(--red)'};font-family:'DM Mono',monospace">${fmtPct(pct)}</div>
         </div>
       </div>
-      <div style="display:flex;gap:8px;margin-top:14px">
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
         ${!isAct?`<button class="btn btn-p btn-sm" onclick="switchPf('${p.id}')">Activeer</button>`:''}
-        <button class="btn btn-o btn-sm" onclick="renamePf('${p.id}')">Hernoemen</button>
-        ${portfolios.length>1?`<button class="btn-d" style="padding:4px 10px" onclick="delPf('${p.id}')">Verwijderen</button>`:''}
+        <button class="btn btn-o btn-sm" onclick="openPfModal('rename','${p.id}','${p.name.replace(/'/g,"\\'")}')">Hernoemen</button>
+        ${portfolios.length>1?`<button class="btn-d" onclick="delPf('${p.id}')">Verwijderen</button>`:''}
       </div>
     </div>`;
   }).join('');
 }
 
-// ═══════════════════════════════════════════
-// CONFIG MODAL
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// INSTELLINGEN
+// ═══════════════════════════════════
 function openApiModal(){
-  document.getElementById('cfg-finnhub').value=CFG.finnhub||'';
-  document.getElementById('cfg-sb-url').value=CFG.sbUrl||'';
-  document.getElementById('cfg-sb-key').value=CFG.sbKey||'';
+  document.getElementById('cfg-av').value=CFG.av||'';
+  document.getElementById('cfg-fh').value=CFG.finnhub||'';
+  document.getElementById('cfg-su').value=CFG.sbUrl||'';
+  document.getElementById('cfg-sk').value=CFG.sbKey||'';
+  document.getElementById('cfg-status').textContent='';
   document.getElementById('api-modal').classList.add('open');
 }
 function closeApiModal(){ document.getElementById('api-modal').classList.remove('open'); }
 document.getElementById('api-modal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeApiModal(); });
 
 async function saveConfig(){
-  CFG.finnhub = document.getElementById('cfg-finnhub').value.trim();
-  CFG.sbUrl   = document.getElementById('cfg-sb-url').value.trim();
-  CFG.sbKey   = document.getElementById('cfg-sb-key').value.trim();
-  saveCFG(); closeApiModal();
-  // Update key hint
-  document.getElementById('key-hint').textContent = CFG.finnhub ? '✓ API key ingesteld' : '⚙ Stel API key in';
-  document.getElementById('key-hint').style.background = CFG.finnhub ? 'var(--greenBg)' : '';
-  document.getElementById('key-hint').style.color = CFG.finnhub ? 'var(--green)' : '';
-  document.getElementById('key-hint').style.borderColor = CFG.finnhub ? 'rgba(0,212,160,.25)' : '';
-  showToast('Instellingen opgeslagen');
-  if(CFG.sbUrl && CFG.sbKey) await initSupabase();
-  if(CFG.finnhub){ syncPrices(); loadBenchmark(); }
+  CFG.av=document.getElementById('cfg-av').value.trim();
+  CFG.finnhub=document.getElementById('cfg-fh').value.trim();
+  CFG.sbUrl=document.getElementById('cfg-su').value.trim();
+  CFG.sbKey=document.getElementById('cfg-sk').value.trim();
+  saveCFG();
+  const btn=document.getElementById('api-btn');
+  btn.className=(CFG.av||CFG.finnhub)?'api-btn ok':'api-btn';
+  btn.textContent=(CFG.av||CFG.finnhub)?'✓ Instellingen':'⚙ Instellingen';
+  document.getElementById('cfg-status').textContent='Opgeslagen ✓';
+  document.getElementById('cfg-status').style.color='var(--green)';
+  closeApiModal();
+  showToast('Instellingen opgeslagen ✓');
+  if(CFG.sbUrl&&CFG.sbKey) await initSupabase();
+  if(CFG.av||CFG.finnhub||getPositions().some(p=>CGMAP[p.ticker.toUpperCase()])){
+    syncPrices(); loadBenchmark();
+  }
 }
 
-// ═══════════════════════════════════════════
-// EXPORT MODAL
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════
 function openExportModal(){ document.getElementById('exp-modal').classList.add('open'); }
 function closeExpModal(){ document.getElementById('exp-modal').classList.remove('open'); }
 document.getElementById('exp-modal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeExpModal(); });
@@ -1113,17 +1279,15 @@ function dlCSV(fn,rows){
 
 function doExport(type){
   const d=new Date().toISOString().slice(0,10);
-  if(type==='tx'){
-    dlCSV(`transacties_${d}.csv`,[['Type','Ticker','Naam','Aantal','Prijs','Kosten','Totaal','Datum'],
-      ...txs().map(t=>[t.type,t.ticker,t.name||'',t.qty,t.price,t.fee||0,parseFloat((t.qty*t.price+(t.fee||0)).toFixed(2)),t.date])]);
-  } else if(type==='div'){
-    dlCSV(`dividenden_${d}.csv`,[['Ticker','Bedrag','Datum','Omschrijving'],
-      ...myDivs().map(d=>[d.ticker,d.amount,d.date,d.desc||''])]);
-  } else if(type==='pos'){
+  if(type==='tx') dlCSV(`transacties_${d}.csv`,[['Type','Ticker','Naam','Aantal','Prijs (€)','Kosten (€)','Totaal (€)','Datum'],...txs().map(t=>[t.type,t.ticker,t.name||'',t.qty,t.price,t.fee||0,parseFloat((t.qty*t.price+(t.fee||0)).toFixed(2)),t.date])]);
+  else if(type==='div') dlCSV(`dividenden_${d}.csv`,[['Ticker','Bedrag (€)','Datum','Omschrijving'],...myDivs().map(d=>[d.ticker,d.amount,d.date,d.desc||''])]);
+  else if(type==='pos'){
     const pos=getPositions();
-    dlCSV(`posities_${d}.csv`,[['Ticker','Naam','Aantal','Gem. kostprijs','Live prijs','Marktwaarde','P&L','P&L%','Dividend'],
-      ...pos.map(p=>{ const ac=avgCost(p),lp=livePrice(p.ticker)??ac,mv=p.qty*lp,pnl=mv-p.cost,pct=p.cost?pnl/p.cost*100:0,div=myDivs().filter(d=>d.ticker===p.ticker).reduce((s,d)=>s+d.amount,0);
-        return [p.ticker,p.name,p.qty.toFixed(6),ac.toFixed(4),lp.toFixed(4),mv.toFixed(2),pnl.toFixed(2),pct.toFixed(2),div.toFixed(2)]; })]);
+    dlCSV(`posities_${d}.csv`,[['Ticker','Naam','Aantal','Gem.aankoopprijs','Kostenbasis','Live prijs','Marktwaarde','P&L','P&L%','Dividend'],...pos.map(p=>{
+      const acu=avgCostPerUnit(p),livePr=lp(p.ticker)??acu,mv=p.qty*livePr,pnl=mv-p.costBasis,pct=p.costBasis?pnl/p.costBasis*100:0;
+      const div=myDivs().filter(d=>d.ticker===p.ticker).reduce((s,d)=>s+d.amount,0);
+      return [p.ticker,p.name,p.qty.toFixed(6),acu.toFixed(4),p.costBasis.toFixed(2),livePr.toFixed(4),mv.toFixed(2),pnl.toFixed(2),pct.toFixed(2),div.toFixed(2)];
+    })]);
   } else {
     const data={portfolios,dividends,assetCls,assetTgt,exported:new Date().toISOString()};
     const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
@@ -1131,60 +1295,72 @@ function doExport(type){
   }
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // TOAST
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 let toastT;
-function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2800); }
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),3000); }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // RENDER ALL
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 function renderAll(){
   const pos=getPositions();
   renderMetrics(pos); renderPie(pos); renderLine(); renderPosTable(pos);
 }
 
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════
+// ═══════════════════════════════════
 document.getElementById('tx-date').valueAsDate=new Date();
 document.getElementById('d-date').valueAsDate=new Date();
 
-// Demo data
-if(!txs().length){
-  pf().transactions=[
-    {type:'BUY',ticker:'AAPL',  name:'Apple Inc.',        qty:10,  price:150,  fee:1.5, date:'2024-01-15'},
-    {type:'BUY',ticker:'IWDA',  name:'iShares MSCI Wld',  qty:25,  price:80,   fee:1.0, date:'2024-02-01'},
-    {type:'BUY',ticker:'NVDA',  name:'NVIDIA Corp.',       qty:5,   price:550,  fee:2.0, date:'2024-03-10'},
-    {type:'BUY',ticker:'MSFT',  name:'Microsoft Corp.',    qty:8,   price:380,  fee:1.5, date:'2024-04-05'},
-    {type:'BUY',ticker:'BTC-EUR',name:'Bitcoin',           qty:0.1, price:42000,fee:5.0, date:'2024-05-01'},
-  ];
-  assetCls={AAPL:'Aandelen',IWDA:'ETF/Fonds',NVDA:'Aandelen',MSFT:'Aandelen','BTC-EUR':'Crypto'};
-  dividends=[
-    {id:1,ticker:'AAPL',amount:12.50,date:'2024-03-15',desc:'Q1 2024',pfId:'default'},
-    {id:2,ticker:'MSFT',amount:18.00,date:'2024-06-20',desc:'Q2 2024',pfId:'default'},
-  ];
-  save();
-}
-
-// Update API key hint
-if(CFG.finnhub){
-  const h=document.getElementById('key-hint');
-  h.textContent='✓ API key ingesteld'; h.style.background='var(--greenBg)';
-  h.style.color='var(--green)'; h.style.borderColor='rgba(0,212,160,.25)';
+// Knop kleur op basis van opgeslagen config
+if(CFG.av||CFG.finnhub){
+  const btn=document.getElementById('api-btn');
+  btn.className='api-btn ok'; btn.textContent='✓ Instellingen';
 }
 
 buildRangeBtns();
 renderAll();
 renderTxList();
 
-// Auto init on load
-setTimeout(async()=>{
-  if(CFG.sbUrl && CFG.sbKey) await initSupabase();
-  if(CFG.finnhub){ syncPrices(); loadBenchmark(); }
-  else { showToast('⚙ Stel je Finnhub API key in voor live koersen'); openApiModal(); }
-},600);
+// Auto-refresh elke 2 uur
+const REFRESH_INTERVAL = 2 * 60 * 60 * 1000; // 2 uur in ms
+
+function shouldRefresh(){
+  const lastTs = prices['_ts']||0;
+  return (Date.now()-lastTs) > REFRESH_INTERVAL;
+}
+
+(async function init(){
+  if(CFG.sbUrl&&CFG.sbKey) await initSupabase();
+  const hasAnyKey = CFG.av||CFG.finnhub;
+  const hasCrypto  = getPositions().some(p=>CGMAP[p.ticker.toUpperCase()]);
+
+  if(hasAnyKey||hasCrypto){
+    if(shouldRefresh()){
+      // Data ouder dan 2 uur → ververs
+      syncPrices();
+      loadBenchmark();
+    } else {
+      // Gebruik gecachte koersen, enkel UI updaten
+      const mins = Math.round((Date.now()-(prices['_ts']||0))/60000);
+      document.getElementById('last-sync').textContent=`Cache: ${mins} min geleden`;
+      renderAll();
+      // Laad benchmark wel altijd (geen zware call)
+      loadBenchmark();
+    }
+  } else {
+    setTimeout(()=>openApiModal(),600);
+  }
+
+  // Zet interval voor auto-refresh elke 2 uur
+  setInterval(()=>{
+    const hasKey=CFG.av||CFG.finnhub||getPositions().some(p=>CGMAP[p.ticker.toUpperCase()]);
+    if(hasKey) syncPrices();
+  }, REFRESH_INTERVAL);
+})();
 </script>
 </body>
 </html>
