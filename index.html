@@ -168,7 +168,34 @@ td.num{text-align:right;font-family:'DM Mono',monospace}
 </style>
 </head>
 <body>
-<div class="shell">
+
+<!-- LOGIN SCHERM -->
+<div id="login-screen" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:9998;display:flex;align-items:center;justify-content:center">
+  <div style="background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r3);padding:36px;width:360px;max-width:90vw">
+    <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.06em;margin-bottom:4px">PORTFOLIO</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:28px">Meld je aan om door te gaan</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Gebruikersnaam</div>
+        <input id="login-user" type="text" placeholder="arthur" autocomplete="username"
+          style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Wachtwoord</div>
+        <input id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password"
+          style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:9px 12px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none">
+      </div>
+      <div id="login-err" style="font-size:12px;color:var(--red);min-height:16px"></div>
+      <button onclick="doLogin()" id="login-btn"
+        style="padding:10px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:opacity .15s">
+        Aanmelden
+      </button>
+    </div>
+    <div id="login-server-status" style="font-size:11px;color:var(--text3);text-align:center;margin-top:16px"></div>
+  </div>
+</div>
+
+<div class="shell" id="main-app" style="display:none">
   <aside class="sidebar">
     <div class="logo"><div class="wm">PORTFOLIO</div><div class="sub">Personal Tracker</div></div>
     <nav class="nav">
@@ -198,6 +225,8 @@ td.num{text-align:right;font-family:'DM Mono',monospace}
       <button class="api-btn" id="api-btn" onclick="openApiModal()">⚙ Instellingen</button>
       <div class="sb-status"><span class="sb-dot" id="sb-dot"></span><span id="sb-label">Supabase: niet verbonden</span></div>
       <div class="last-sync" id="last-sync"></div>
+      <button onclick="doLogout()" style="width:100%;margin-top:8px;padding:7px;background:none;border:1px solid var(--border2);border-radius:var(--r);color:var(--text3);font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text3)'">↩ Uitloggen</button>
+      <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:6px" id="logged-in-as"></div>
     </div>
   </aside>
 
@@ -327,6 +356,11 @@ td.num{text-align:right;font-family:'DM Mono',monospace}
   <div class="md">
     <div class="md-title">⚙ Instellingen</div>
     <div class="md-sub">Keys worden permanent opgeslagen in je browser.</div>
+    <div class="api-section" style="border-left-color:var(--green)">
+      <div class="sec-title">Server URL (vereist voor live koersen)</div>
+      <div class="sec-sub">Jouw Render.com server URL — zie stappenplan</div>
+      <div class="api-field"><label>Server URL</label><input type="text" id="cfg-server" placeholder="https://portfolio-tracker-api.onrender.com" spellcheck="false" autocomplete="off"></div>
+    </div>
     <div class="api-section">
       <div class="sec-title">Alpha Vantage — Aandelen, ETFs & Goud (aanbevolen)</div>
       <div class="sec-sub">Gratis op <a href="https://www.alphavantage.co/support/#api-key" target="_blank">alphavantage.co</a> → "Get Free API Key" → kopieer je key. Crypto via CoinGecko werkt altijd gratis zonder key.</div>
@@ -501,26 +535,53 @@ async function pullFromSupabase(){
 // ═══════════════════════════════════
 // PRIJS OPHALEN
 // ═══════════════════════════════════
-// ── Alpha Vantage ──────────────────────────────────────────────────
-// Tries symbol as-is, then with Euronext suffixes
-// Returns {price, chg, chgP, source} or null
-async function fetchAlphaVantage(sym){
-  if(!CFG.av) return null;
-  const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${encodeURIComponent(sym)}&apikey=${CFG.av}`;
+// ═══════════════════════════════════════════
+// SERVER API — alle koersen via eigen server
+// ═══════════════════════════════════════════
+
+function getServerUrl(){
+  return (CFG.server||'').replace(/\/$/, '');
+}
+
+function getAuthHeader(){
+  const token = localStorage.getItem('ptx_token');
+  return token ? {'Authorization': 'Bearer '+token} : {};
+}
+
+async function serverFetch(path, options={}){
+  const url = getServerUrl();
+  if(!url) return null;
   try{
-    const r=await fetch(url,{signal:AbortSignal.timeout(10000)});
+    const r = await fetch(url+path, {
+      ...options,
+      headers: {...getAuthHeader(), 'Content-Type':'application/json', ...(options.headers||{})},
+      signal: AbortSignal.timeout(12000)
+    });
+    if(r.status===401){ showLoginScreen(); return null; }
     if(!r.ok) return null;
-    const d=await r.json();
-    const q=d['Global Quote'];
-    if(!q||!q['05. price']||q['05. price']==='0.0000') return null;
-    const price=parseFloat(q['05. price']);
-    const chg=parseFloat(q['09. change']||0);
-    const chgP=parseFloat((q['10. change percent']||'0%').replace('%',''));
-    return {price,chg,chgP,source:'Alpha Vantage'};
+    return r.json();
   }catch(e){ return null; }
 }
 
-// ── CoinGecko (crypto + goud/zilver) ───────────────────────────────
+// Haal meerdere koersen op van server in één call
+async function fetchPricesFromServer(tickers){
+  const data = await serverFetch('/prices', {
+    method:'POST',
+    body: JSON.stringify({tickers})
+  });
+  return data || {};
+}
+
+// Historische data voor grafiek
+async function fetchHistoryFromServer(ticker, period='1y'){
+  const data = await serverFetch(`/history/${encodeURIComponent(ticker)}?period=${period}`);
+  if(!data||!data.data) return null;
+  const res = {};
+  data.data.forEach(d=>res[d.date]=d.close);
+  return res;
+}
+
+// CoinGecko blijft gratis voor crypto (geen server nodig)
 async function fetchCoinGecko(ticker){
   const id=CGMAP[ticker.toUpperCase()];
   if(!id) return null;
@@ -533,106 +594,6 @@ async function fetchCoinGecko(ticker){
   }catch(e){ return null; }
 }
 
-// ── Finnhub (fallback) ──────────────────────────────────────────────
-async function fetchFinnhub(sym){
-  if(!CFG.finnhub) return null;
-  try{
-    const r=await fetch(`https://finnhub.io/api/v1/quote?symbol=${encodeURIComponent(sym)}&token=${CFG.finnhub}`,{signal:AbortSignal.timeout(7000)});
-    if(!r.ok) return null;
-    const d=await r.json();
-    if(!d||!d.c||d.c===0) return null;
-    return {price:d.c,chg:d.d||0,chgP:d.dp||0,source:'Finnhub'};
-  }catch(e){ return null; }
-}
-
-// ── Master fetch — probeert alle bronnen op volgorde ───────────────
-async function fetchPrice(ticker){
-  const t=ticker.toUpperCase();
-
-  // 1. Crypto & precious metals via CoinGecko (altijd gratis)
-  if(CGMAP[t]){ const cg=await fetchCoinGecko(t); if(cg) return cg; }
-
-  // 2. Alpha Vantage — probeer ticker direct
-  if(CFG.av){
-    const av=await fetchAlphaVantage(t); if(av) return av;
-    // Euronext Amsterdam
-    const avAS=await fetchAlphaVantage(t+'.AS'); if(avAS) return {...avAS,source:'Alpha Vantage .AS'};
-    // Euronext Brussel
-    const avBR=await fetchAlphaVantage(t+'.BR'); if(avBR) return {...avBR,source:'Alpha Vantage .BR'};
-    // London
-    const avL=await fetchAlphaVantage(t+'.L'); if(avL) return {...avL,source:'Alpha Vantage .L'};
-  }
-
-  // 3. Finnhub als fallback
-  if(CFG.finnhub){
-    const fh=await fetchFinnhub(t); if(fh) return fh;
-    const fhAS=await fetchFinnhub(t+'.AS'); if(fhAS) return {...fhAS,source:'Finnhub .AS'};
-    const fhBR=await fetchFinnhub(t+'.BR'); if(fhBR) return {...fhBR,source:'Finnhub .BR'};
-  }
-
-  return null;
-}
-
-// Historische data (voor grafiek)
-async function fetchHistoryCG(ticker, days){
-  const id=CGMAP[ticker.toUpperCase()];
-  if(!id) return null;
-  try{
-    const r=await fetch(`https://api.coingecko.com/api/v3/coins/${id}/market_chart?vs_currency=eur&days=${days}`,{signal:AbortSignal.timeout(10000)});
-    if(!r.ok) return null;
-    const d=await r.json();
-    const res={};
-    (d.prices||[]).forEach(([ts,p])=>{ res[new Date(ts).toISOString().slice(0,10)]=p; });
-    return res;
-  }catch(e){ return null; }
-}
-
-async function fetchHistoryFH(ticker, fromDate){
-  if(!CFG.finnhub) return null;
-  const from=Math.floor(new Date(fromDate).getTime()/1000);
-  const to=Math.floor(Date.now()/1000);
-  try{
-    const r=await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${encodeURIComponent(ticker)}&resolution=D&from=${from}&to=${to}&token=${CFG.finnhub}`,{signal:AbortSignal.timeout(10000)});
-    if(!r.ok) return null;
-    const d=await r.json();
-    if(!d||d.s!=='ok'||!d.t) return null;
-    const res={};
-    d.t.forEach((ts,i)=>{ res[new Date(ts*1000).toISOString().slice(0,10)]=d.c[i]; });
-    return res;
-  }catch(e){ return null; }
-}
-
-// ═══════════════════════════════════
-// BENCHMARK — correct geïndexeerd
-// ═══════════════════════════════════
-let benchHistory=null;
-
-async function loadBenchmark(){
-  const sym=(document.getElementById('bench-sym')?.value||'').trim();
-  if(!sym){ benchHistory=null; renderLine(); return; }
-  const hist=getPortfolioHistory();
-  if(!hist.length){ benchHistory=null; renderLine(); return; }
-  const fromDate=hist[0].date;
-  const days=Math.ceil((Date.now()-new Date(fromDate).getTime())/(86400000));
-
-  let data=null;
-  // Probeer CoinGecko voor crypto benchmark
-  if(CGMAP[sym.toUpperCase()]) data=await fetchHistoryCG(sym,days);
-  // Anders Finnhub
-  if(!data) data=await fetchHistoryFH(sym,fromDate);
-  if(!data && CFG.finnhub){ data=await fetchHistoryFH(sym+'.AS',fromDate); }
-
-  if(!data||!Object.keys(data).length){ benchHistory=null; renderLine(); return; }
-
-  const entries=Object.entries(data).sort((a,b)=>a[0].localeCompare(b[0]));
-  // Normaliseer: eerste dag = 100
-  const base=entries[0][1]||1;
-  benchHistory={
-    labels:entries.map(e=>e[0]),
-    vals:entries.map(e=>parseFloat(((e[1]/base)*100).toFixed(3)))
-  };
-  renderLine();
-}
 
 async function syncPrices(){
   const positions=getPositions();
@@ -640,12 +601,32 @@ async function syncPrices(){
   const btn=document.getElementById('sync-btn');
   const ico=document.getElementById('sync-ico');
   btn.classList.add('syncing'); ico.classList.add('spin');
-  let ok=0,fail=0;
-  for(const p of positions){
-    const q=await fetchPrice(p.ticker);
-    if(q){ prices[p.ticker]={...q,ts:Date.now()}; ok++; }
+  let ok=0, fail=0;
+
+  // Splits crypto (CoinGecko) en de rest (server)
+  const cryptoPos  = positions.filter(p=>CGMAP[p.ticker.toUpperCase()]);
+  const serverPos  = positions.filter(p=>!CGMAP[p.ticker.toUpperCase()]);
+
+  // Crypto via CoinGecko
+  for(const p of cryptoPos){
+    const q = await fetchCoinGecko(p.ticker);
+    if(q){ prices[p.ticker]={price:q.price,chg:q.chg,chgP:q.chgP,source:q.source,ts:Date.now()}; ok++; }
     else fail++;
   }
+
+  // Aandelen/ETFs via eigen server (één batch call)
+  if(serverPos.length && getServerUrl()){
+    const tickers = serverPos.map(p=>p.ticker);
+    const data = await fetchPricesFromServer(tickers);
+    for(const p of serverPos){
+      const q = data[p.ticker];
+      if(q){ prices[p.ticker]={price:q.price,chg:q.change,chgP:q.changePercent,source:q.source,ts:Date.now()}; ok++; }
+      else fail++;
+    }
+  } else if(serverPos.length){
+    fail += serverPos.length;
+  }
+
   prices['_ts']=Date.now();
   saveLocal();
   const now=new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'});
@@ -654,7 +635,7 @@ async function syncPrices(){
   badge.className='badge '+(fail===0?'live':'stale');
   badge.innerHTML=`<span class="pulse"></span>${fail===0?'Live':'Gedeeltelijk'} · ${now}`;
   btn.classList.remove('syncing'); ico.classList.remove('spin');
-  showToast(`${ok} ticker${ok!==1?'s':''} bijgewerkt${fail?` · ${fail} mislukt`:''}`);
+  showToast(`${ok} ticker${ok!==1?'s':''} bijgewerkt${fail?' · '+fail+' mislukt':''}`);
   renderAll();
   if(SB_OK) pushToSupabase();
 }
@@ -1235,6 +1216,7 @@ function renderPfPage(){
 // INSTELLINGEN
 // ═══════════════════════════════════
 function openApiModal(){
+  document.getElementById('cfg-server').value=CFG.server||'';
   document.getElementById('cfg-av').value=CFG.av||'';
   document.getElementById('cfg-fh').value=CFG.finnhub||'';
   document.getElementById('cfg-su').value=CFG.sbUrl||'';
@@ -1246,6 +1228,7 @@ function closeApiModal(){ document.getElementById('api-modal').classList.remove(
 document.getElementById('api-modal').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeApiModal(); });
 
 async function saveConfig(){
+  CFG.server=document.getElementById('cfg-server').value.trim().replace(/\/$/,'');
   CFG.av=document.getElementById('cfg-av').value.trim();
   CFG.finnhub=document.getElementById('cfg-fh').value.trim();
   CFG.sbUrl=document.getElementById('cfg-su').value.trim();
@@ -1326,40 +1309,137 @@ renderAll();
 renderTxList();
 
 // Auto-refresh elke 2 uur
-const REFRESH_INTERVAL = 2 * 60 * 60 * 1000; // 2 uur in ms
+const REFRESH_INTERVAL = 2 * 60 * 60 * 1000;
 
 function shouldRefresh(){
   const lastTs = prices['_ts']||0;
   return (Date.now()-lastTs) > REFRESH_INTERVAL;
 }
 
-(async function init(){
-  if(CFG.sbUrl&&CFG.sbKey) await initSupabase();
-  const hasAnyKey = CFG.av||CFG.finnhub;
-  const hasCrypto  = getPositions().some(p=>CGMAP[p.ticker.toUpperCase()]);
 
-  if(hasAnyKey||hasCrypto){
-    if(shouldRefresh()){
-      // Data ouder dan 2 uur → ververs
-      syncPrices();
-      loadBenchmark();
-    } else {
-      // Gebruik gecachte koersen, enkel UI updaten
-      const mins = Math.round((Date.now()-(prices['_ts']||0))/60000);
-      document.getElementById('last-sync').textContent=`Cache: ${mins} min geleden`;
-      renderAll();
-      // Laad benchmark wel altijd (geen zware call)
-      loadBenchmark();
-    }
+// ═══════════════════════════════════════════
+// LOGIN / LOGOUT
+// ═══════════════════════════════════════════
+
+function showLoginScreen(){
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('main-app').style.display='none';
+}
+
+function showMainApp(username){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-app').style.display='flex';
+  const el=document.getElementById('logged-in-as');
+  if(el) el.textContent='Ingelogd als: '+username;
+}
+
+async function doLogin(){
+  const user=document.getElementById('login-user').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  const err=document.getElementById('login-err');
+  const btn=document.getElementById('login-btn');
+  const url=getServerUrl();
+
+  if(!url){
+    err.textContent='Stel eerst de server URL in via ⚙ Instellingen';
+    return;
+  }
+  if(!user||!pass){ err.textContent='Vul gebruikersnaam en wachtwoord in.'; return; }
+
+  btn.textContent='Aanmelden...'; btn.style.opacity='.7';
+  err.textContent='';
+
+  try{
+    const r=await fetch(url+'/auth/login',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({username:user,password:pass}),
+      signal:AbortSignal.timeout(10000)
+    });
+    const data=await r.json();
+    if(!r.ok){ err.textContent=data.detail||'Inloggen mislukt'; btn.textContent='Aanmelden'; btn.style.opacity='1'; return; }
+    localStorage.setItem('ptx_token', data.token);
+    localStorage.setItem('ptx_username', data.username);
+    showMainApp(data.username);
+    initApp();
+  }catch(e){
+    err.textContent='Server niet bereikbaar — controleer de URL in instellingen';
+    btn.textContent='Aanmelden'; btn.style.opacity='1';
+  }
+}
+
+function doLogout(){
+  localStorage.removeItem('ptx_token');
+  localStorage.removeItem('ptx_username');
+  showLoginScreen();
+}
+
+// Enter key op login velden
+document.getElementById('login-pass').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('login-user').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('login-pass').focus(); });
+
+// ═══════════════════════════════════════════
+// HOOFD-INIT (wordt aangeroepen na login)
+// ═══════════════════════════════════════════
+async function initApp(){
+  loadState();
+  buildRangeBtns();
+  renderAll();
+  renderTxList();
+  if(CFG.sbUrl&&CFG.sbKey) await initSupabase();
+  const hasCrypto=getPositions().some(p=>CGMAP[p.ticker.toUpperCase()]);
+  if(shouldRefresh()){
+    syncPrices(); loadBenchmark();
   } else {
-    setTimeout(()=>openApiModal(),600);
+    const mins=Math.round((Date.now()-(prices['_ts']||0))/60000);
+    document.getElementById('last-sync').textContent=`Cache: ${mins} min geleden`;
+    renderAll(); loadBenchmark();
+  }
+  setInterval(()=>{ syncPrices(); }, REFRESH_INTERVAL);
+}
+
+
+// ═══════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════
+(async function start(){
+  // Check of server URL al ingesteld is
+  const serverUrl = CFG.server||'';
+  const token = localStorage.getItem('ptx_token');
+
+  if(!serverUrl){
+    // Geen server URL → toon instellingen scherm
+    showLoginScreen();
+    document.getElementById('login-server-status').textContent='Server URL nog niet ingesteld — klik ⚙ en stel in';
+    setTimeout(()=>openApiModal(),400);
+    return;
   }
 
-  // Zet interval voor auto-refresh elke 2 uur
-  setInterval(()=>{
-    const hasKey=CFG.av||CFG.finnhub||getPositions().some(p=>CGMAP[p.ticker.toUpperCase()]);
-    if(hasKey) syncPrices();
-  }, REFRESH_INTERVAL);
+  if(!token){
+    // Wel server URL, geen token → toon login
+    showLoginScreen();
+    return;
+  }
+
+  // Verifieer token bij server
+  try{
+    const r=await fetch(serverUrl+'/auth/me',{
+      headers:{'Authorization':'Bearer '+token},
+      signal:AbortSignal.timeout(5000)
+    });
+    if(r.ok){
+      const data=await r.json();
+      showMainApp(data.username);
+      await initApp();
+    } else {
+      localStorage.removeItem('ptx_token');
+      showLoginScreen();
+    }
+  }catch(e){
+    // Server niet bereikbaar — toon login met melding
+    showLoginScreen();
+    document.getElementById('login-server-status').textContent='Server tijdelijk niet bereikbaar';
+  }
 })();
 </script>
 </body>
